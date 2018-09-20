@@ -16,7 +16,7 @@ const generateChannels = require('./mock');
 
 const emit = async socket => {
     try {
-        const channels = generateChannels(1);
+        const channels = generateChannels(2);
         socket.emit("channels", channels);
     } catch (err) {
         console.log('Error: ', error);
