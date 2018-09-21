@@ -14,25 +14,35 @@ const io = socketIo(server);
 
 const generateChannels = require('./mock');
 
-let duration = 5000;
-const emitContinously = socket => {
-    setTimeout(() => {
-        const channels = generateChannels(2);
-        socket.emit('channels', channels);
-        emitContinously(socket);
-    }, duration);
+let interval;
+let duration;
+
+const emit = socket => {
+    const channels = generateChannels(2);
+    socket.emit('channels', channels);
 };
 
 io.on('connection', socket => {
-    setTimeout(() => emitContinously(socket), duration);
+    emit(socket);
+    interval = setInterval(() => {
+        emit(socket);
+    }, 5000);
 
     socket.on('seconds', seconds => {
         if (seconds * 1000 !== duration) {
+            clearInterval(interval);
             duration = seconds * 1000;
+            emit(socket);
+            interval = setInterval(() => {
+                emit(socket);
+            }, duration);
         }
     });
 
-    exit = false;
+    socket.on('disconnect', () => {
+        clearInterval(interval);
+        console.log('Client disconnected');
+    });
 });
 
 server.listen(port, () => console.log('Listening on port', port));

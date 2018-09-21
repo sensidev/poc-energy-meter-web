@@ -39,16 +39,16 @@ class App extends React.Component {
         active: 5
     };
 
+    socket = socketIOClient(ENDPOINT);
+
     componentDidMount() {
-        const socket = socketIOClient(ENDPOINT);
-        socket.on('channels', data => {
+        this.socket.on('channels', data => {
             this.setState({ data });
         });
     }
 
     emitToServer = (message, data) => {
-        const socket = socketIOClient(ENDPOINT);
-        socket.emit(message, data);
+        this.socket.emit(message, data);
     };
 
     onClick = sec => {
