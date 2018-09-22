@@ -19,9 +19,13 @@ let interval;
 * The interval at which data is sent over the socket
 */
 let EMIT_INTERVAL = 5000;
+/*
+* Number of channels generated
+*/
+let NUMBER_OF_CHANNELS = 4;
 
 const emit = (socket, dataPoints, initial) => {
-    const channels = generateChannels(2, dataPoints, initial);
+    const channels = generateChannels(NUMBER_OF_CHANNELS, dataPoints, initial);
     socket.emit('channels', channels);
 };
 
@@ -30,15 +34,12 @@ io.on('connection', socket => {
         clearInterval(interval);
     }
 
-    /*
-    * The number of data points which have to be generated
-    */
-    const DATA_POINTS = EMIT_INTERVAL / 1000;
+    const dataPoints = EMIT_INTERVAL / 1000;
 
     emit(socket, 60, true);
 
     interval = setInterval(() => {
-        emit(socket, DATA_POINTS, false);
+        emit(socket, dataPoints, false);
     }, EMIT_INTERVAL);
 
     socket.on('disconnect', () => {

@@ -5,35 +5,34 @@ import { Channel } from './Channel';
 import './App.css';
 
 const ENDPOINT = 'http://127.0.0.1:8000';
+/*
+* Number of channels generated
+*/
+const NUMBER_OF_CHANNELS = 4;
 
-const channels = [
-    {
-        id: 0,
-        timestamp: 0,
-        energy: 0,
-        voltage: 0,
-        power: 0,
-        rms_min_current: 0,
-        rms_avg_current: 0,
-        rms_max_current: 0,
-        rms_current_data_points: []
-    },
-    {
-        id: 1,
-        timestamp: 0,
-        energy: 0,
-        voltage: 0,
-        power: 0,
-        rms_min_current: 0,
-        rms_avg_current: 0,
-        rms_max_current: 0,
-        rms_current_data_points: []
+const generateChannels = num => {
+    let channels = new Array(num);
+
+    for (let index = 0; index < num; index++) {
+        channels[index] = {
+            id: index,
+            timestamp: 0,
+            energy: 0,
+            voltage: 0,
+            power: 0,
+            rms_min_current: 0,
+            rms_avg_current: 0,
+            rms_max_current: 0,
+            rms_current_data_points: []
+        };
     }
-];
+
+    return channels;
+};
 
 class App extends React.Component {
     state = {
-        data: channels,
+        data: generateChannels(NUMBER_OF_CHANNELS),
         first: true
     };
 
@@ -94,8 +93,9 @@ class App extends React.Component {
     render() {
         return (
             <div className="container">
-                <Channel chartData={this.state.data[0]} />
-                <Channel chartData={this.state.data[1]} />
+                {this.state.data.map(channel => (
+                    <Channel chartData={channel} />
+                ))}
             </div>
         );
     }
