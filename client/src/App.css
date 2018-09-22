@@ -1,7 +1,8 @@
 /*  
-    light: #1D348C
-    dark: #182E83
+    light: #7188e2
+    dark: #1D348C
 */
+
 .container {
     display: flex;
     flex-direction: column;
@@ -9,6 +10,7 @@
     height: 100vh;
     justify-content: space-around;
     align-items: center;
+    overflow: hidden;
 }
 
 .channel {
@@ -22,8 +24,9 @@
 }
 
 .chart {
-    width: 100%;
-    height: 40%;
+    width: 106vw;
+    height: 50%;
+    transform: translateY(30px) scaleX(1);
 }
 
 .panel {
@@ -31,15 +34,15 @@
     justify-content: center;
     background-color: #1d348c;
     width: 100%;
-    height: 40%;
+    height: 45%;
 }
 
 .column {
     display: flex;
     flex: 1;
     flex-direction: column;
-    justify-content: space-between;
-    margin: 40px 20px;
+    justify-content: flex-end;
+    padding: 20px 0;
 }
 
 .panel-label {
@@ -55,21 +58,4 @@
     letter-spacing: 2px;
     font-weight: bold;
     text-align: center;
-}
-
-.buttons-container {
-    display: flex;
-    position: absolute;
-    top: 0;
-}
-
-.button {
-    margin: 15px;
-    color: #fff;
-    border-radius: 5px;
-    padding: 10px 20px;
-}
-
-.button:hover {
-    cursor: pointer;
 }

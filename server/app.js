@@ -15,29 +15,31 @@ const io = socketIo(server);
 const generateChannels = require('./mock');
 
 let interval;
-let duration;
+/*
+* The interval at which data is sent over the socket
+*/
+let EMIT_INTERVAL = 5000;
 
-const emit = socket => {
-    const channels = generateChannels(2);
+const emit = (socket, dataPoints, initial) => {
+    const channels = generateChannels(2, dataPoints, initial);
     socket.emit('channels', channels);
 };
 
 io.on('connection', socket => {
-    emit(socket);
-    interval = setInterval(() => {
-        emit(socket);
-    }, 5000);
+    if (interval) {
+        clearInterval(interval);
+    }
 
-    socket.on('seconds', seconds => {
-        if (seconds * 1000 !== duration) {
-            clearInterval(interval);
-            duration = seconds * 1000;
-            emit(socket);
-            interval = setInterval(() => {
-                emit(socket);
-            }, duration);
-        }
-    });
+    /*
+    * The number of data points which have to be generated
+    */
+    const DATA_POINTS = EMIT_INTERVAL / 1000;
+
+    emit(socket, 60, true);
+
+    interval = setInterval(() => {
+        emit(socket, DATA_POINTS, false);
+    }, EMIT_INTERVAL);
 
     socket.on('disconnect', () => {
         clearInterval(interval);

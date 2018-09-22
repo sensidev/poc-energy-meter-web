@@ -1,12 +1,12 @@
 let totalEnergy = 0;
 
-const generateData = () => {
-    let points = new Array(60);
+const generateData = (dataPoints, initial) => {
+    let points = new Array(dataPoints);
     let min = 16;
     let max = 0;
     let sum = 0;
 
-    for (let index = 0; index < 60; index++) {
+    for (let index = 0; index < dataPoints; index++) {
         const point = Math.random() * (16 - 0) + 0;
         sum += point;
 
@@ -17,9 +17,21 @@ const generateData = () => {
             max = point;
         }
 
-        const s = String(point);
-        const trimmed = s.substring(0, s.indexOf('.') + 4);
-        points[index] = +trimmed;
+        const sPoint = String(point);
+
+        const date = new Date();
+        let timestamp;
+        if (initial) {
+            timestamp = date.getTime() - 55000;
+        } else {
+            timestamp = date.getTime();
+        }
+
+        const step = 1000;
+        const x = timestamp + index * step;
+        const y = sPoint.substring(0, sPoint.indexOf('.') + 4);
+
+        points[index] = { x, y: +y };
     }
 
     const avg = sum / 60;
@@ -44,15 +56,14 @@ const generateData = () => {
     };
 };
 
-const generateChannels = num => {
+const generateChannels = (num, dataPoints, initial) => {
     let channels = new Array(num);
 
     for (let index = 0; index < num; index++) {
-        const data = generateData();
+        const data = generateData(dataPoints, initial);
 
         channels[index] = {
             id: index,
-            timestamp: new Date(),
             energy: +data.energy,
             voltage: data.voltage,
             power: data.power,

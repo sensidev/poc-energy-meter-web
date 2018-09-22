@@ -10,7 +10,6 @@ const channels = [
     {
         id: 0,
         timestamp: 0,
-        interval_ms: 60000,
         energy: 0,
         voltage: 0,
         power: 0,
@@ -22,7 +21,6 @@ const channels = [
     {
         id: 1,
         timestamp: 0,
-        interval_ms: 60000,
         energy: 0,
         voltage: 0,
         power: 0,
@@ -36,75 +34,68 @@ const channels = [
 class App extends React.Component {
     state = {
         data: channels,
-        active: 5
+        first: true
     };
 
     socket = socketIOClient(ENDPOINT);
 
     componentDidMount() {
         this.socket.on('channels', data => {
-            this.setState({ data });
+            if (this.state.first) {
+                this.setState({ data, first: false });
+            } else {
+                const newData = this.state.data.map((channel, index) => {
+                    const incomingDataPoints =
+                        data[index].rms_current_data_points;
+
+                    channel.rms_current_data_points = channel.rms_current_data_points.concat(
+                        incomingDataPoints
+                    );
+
+                    channel.rms_current_data_points.splice(
+                        0,
+                        incomingDataPoints.length
+                    );
+
+                    let sum = 0;
+                    let max = 0;
+                    let min = 16;
+                    for (const point of channel.rms_current_data_points) {
+                        point.x = new Date(point.x);
+                        sum += point.y;
+
+                        if (point.y < min) {
+                            min = point.y;
+                        }
+                        if (point.y > max) {
+                            max = point.y;
+                        }
+                    }
+                    const avg = sum / 60;
+                    const sAvg = String(avg);
+
+                    channel.energy = data[index].energy;
+                    channel.power = data[index].power;
+                    channel.voltage = data[index].voltage;
+                    channel.rms_avg_current = sAvg.substring(
+                        0,
+                        sAvg.indexOf('.') + 4
+                    );
+                    channel.rms_min_current = min;
+                    channel.rms_max_current = max;
+
+                    return channel;
+                });
+                this.setState({ data: newData });
+            }
         });
     }
 
-    emitToServer = (message, data) => {
-        this.socket.emit(message, data);
-    };
-
-    onClick = sec => {
-        this.setState({ active: sec });
-        this.emitToServer('seconds', sec);
-    };
-
     render() {
-        const { active } = this.state;
-
         return (
             <div className="container">
-                <div className="buttons-container">
-                    <div
-                        className="button"
-                        style={{
-                            backgroundColor:
-                                active === 1 ? '#637de2' : '#1d348c'
-                        }}
-                        onClick={() => this.onClick(1)}
-                    >
-                        1 sec
-                    </div>
-                    <div
-                        className="button"
-                        style={{
-                            backgroundColor:
-                                active === 5 ? '#637de2' : '#1d348c'
-                        }}
-                        onClick={() => this.onClick(5)}
-                    >
-                        5 sec
-                    </div>
-                    <div
-                        className="button"
-                        style={{
-                            backgroundColor:
-                                active === 30 ? '#637de2' : '#1d348c'
-                        }}
-                        onClick={() => this.onClick(30)}
-                    >
-                        30 sec
-                    </div>
-                    <div
-                        className="button"
-                        style={{
-                            backgroundColor:
-                                active === 60 ? '#637de2' : '#1d348c'
-                        }}
-                        onClick={() => this.onClick(60)}
-                    >
-                        60 sec
-                    </div>
-                </div>
-                <Channel data={this.state.data[0]} />
-                <Channel data={this.state.data[1]} />
+                <Channel chartData={this.state.data[0]} />
+                <Channel chartData={this.state.data[1]} />
             </div>
         );
     }
