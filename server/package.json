@@ -5,11 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app"
+    "start_mock": "nodemon mockApp",
+    "start_mqtt": "node mqttApp",
+    "start_mqtt_debug": "node $NODE_DEBUG_OPTION mqttApp"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-iot-device-sdk": "^2.2.1",
     "express": "^4.16.3",
     "nodemon": "^1.18.4",
     "socket.io": "^2.1.1"

@@ -5,27 +5,23 @@ const socketIo = require('socket.io');
 const port = process.env.PORT || 8000;
 const index = require('./routes/index');
 
-const app = express();
-app.use(index);
+const mockApp = express();
+mockApp.use(index);
 
-const server = http.createServer(app);
+const server = http.createServer(mockApp);
 
 const io = socketIo(server);
 
 const generateChannels = require('./mock');
 
-let interval;
-/*
-* The interval at which data is sent over the socket
-*/
-let EMIT_INTERVAL = 5000;
-/*
-* Number of channels generated
-*/
-let NUMBER_OF_CHANNELS = 4;
+const EMIT_INTERVAL = 5000;
+const DATA_POINTS_PER_INTERVAL = 1;
+const NUMBER_OF_CHANNELS = 4;
 
-const emit = (socket, dataPoints, initial) => {
-    const channels = generateChannels(NUMBER_OF_CHANNELS, dataPoints, initial);
+let interval;
+
+const emit = (socket, dataPoints) => {
+    const channels = generateChannels(NUMBER_OF_CHANNELS, dataPoints);
     socket.emit('channels', channels);
 };
 
@@ -34,12 +30,8 @@ io.on('connection', socket => {
         clearInterval(interval);
     }
 
-    const dataPoints = EMIT_INTERVAL / 1000;
-
-    emit(socket, 60, true);
-
     interval = setInterval(() => {
-        emit(socket, dataPoints, false);
+        emit(socket, DATA_POINTS_PER_INTERVAL);
     }, EMIT_INTERVAL);
 
     socket.on('disconnect', () => {
