@@ -15,6 +15,8 @@ mqttApp.use(index);
 
 const server = http.createServer(mqttApp);
 
+const io = socketIo(server, {path: '/ws'});
+
 const DIGITS = 3;
 
 function runServer() {
@@ -69,9 +71,7 @@ function mqttSubscribe(args) {
         debug: args.Debug
     });
 
-    const socket = socketIo(server, {path: '/ws'});
-
-    socket.on('connection', s => {
+    io.on('connection', s => {
         console.log('SocketIO connected!');
     });
 
@@ -105,7 +105,7 @@ function mqttSubscribe(args) {
             channels[c] = getProcessChannel(channels[c], now);
         }
 
-        socket.emit('channels', channels);
+        io.emit('channels', channels);
     });
 }
 
