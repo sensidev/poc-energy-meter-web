@@ -13,7 +13,7 @@ const index = require('./routes/index');
 const mqttApp = express();
 mqttApp.use(index);
 
-const server = http.createServer(mqttApp);
+const server = http.createServer(mqttApp, {path: '/ws'});
 
 const DIGITS = 3;
 
@@ -37,7 +37,7 @@ function getProcessChannel(channel, now) {
         channel['rms_current_data_points'][p] = {
             'x': timestamp + p * step,
             'y': round(channel['rms_current_data_points'][p], DIGITS)
-    }
+        }
     }
 
     channel['energy'] = round(channel['energy'], DIGITS);

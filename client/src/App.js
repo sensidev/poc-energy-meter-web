@@ -45,7 +45,7 @@ class App extends React.Component {
         data: generateChannels(CHANNELS.length),
     };
 
-    socket = socketIOClient(API_ROOT);
+    socket = socketIOClient(API_ROOT, {path: '/ws'});
 
     componentDidMount() {
         console.log("Connected to ", API_ROOT);

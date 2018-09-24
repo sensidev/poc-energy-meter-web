@@ -10,7 +10,7 @@ mockApp.use(index);
 
 const server = http.createServer(mockApp);
 
-const io = socketIo(server);
+const io = socketIo(server, {path: '/ws'});
 
 const generateChannels = require('./mock');
 
