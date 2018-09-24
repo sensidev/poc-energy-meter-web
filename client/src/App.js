@@ -5,7 +5,7 @@ import {Channel} from './Channel';
 import './App.css';
 
 const ENDPOINT = 'http://127.0.0.1:8000';
-const NUMBER_OF_CHANNELS = 4;
+const CHANNELS = [0, 3];
 const DATA_POINTS_PER_CHART = 60;
 const DIGITS = 3;
 
@@ -42,7 +42,7 @@ const generateChannels = num => {
 
 class App extends React.Component {
     state = {
-        data: generateChannels(NUMBER_OF_CHANNELS),
+        data: generateChannels(CHANNELS.length),
     };
 
     socket = socketIOClient(ENDPOINT);
@@ -50,20 +50,22 @@ class App extends React.Component {
     componentDidMount() {
         this.socket.on('channels', data => {
             const newData = this.state.data.map((channel, index) => {
-                const newPoints = data[index].rms_current_data_points;
+                if (index in CHANNELS) {
+                    const newPoints = data[index].rms_current_data_points;
 
-                this.addNewPointsFor(channel, newPoints);
-                this.removeOldPointsFor(channel);
+                    this.addNewPointsFor(channel, newPoints);
+                    this.removeOldPointsFor(channel);
 
-                this.computeMinAvgMaxRMSCurrentFor(channel);
+                    this.computeMinAvgMaxRMSCurrentFor(channel);
 
-                channel.energy += +data[index].energy;  // sum up energy!
+                    channel.energy += +data[index].energy;  // sum up energy!
 
-                channel.energy = +channel.energy.toFixed(DIGITS);
-                channel.power = +data[index].power.toFixed(DIGITS);
-                channel.voltage = +data[index].voltage.toFixed(DIGITS);
+                    channel.energy = +channel.energy.toFixed(DIGITS);
+                    channel.power = +data[index].power.toFixed(DIGITS);
+                    channel.voltage = +data[index].voltage.toFixed(DIGITS);
 
-                return channel;
+                    return channel;
+                }
             });
             this.setState({data: newData});
         });
