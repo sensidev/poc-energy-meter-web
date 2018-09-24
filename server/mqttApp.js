@@ -13,7 +13,7 @@ const index = require('./routes/index');
 const mqttApp = express();
 mqttApp.use(index);
 
-const server = http.createServer(mqttApp, {path: '/ws'});
+const server = http.createServer(mqttApp);
 
 const DIGITS = 3;
 
@@ -69,7 +69,7 @@ function mqttSubscribe(args) {
         debug: args.Debug
     });
 
-    const socket = socketIo(server);
+    const socket = socketIo(server, {path: '/ws'});
 
     socket.on('connection', s => {
         console.log('SocketIO connected!');
