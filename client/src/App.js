@@ -48,6 +48,7 @@ class App extends React.Component {
     socket = socketIOClient(API_ROOT);
 
     componentDidMount() {
+        console.log("Connected to ", API_ROOT);
         this.socket.on('channels', data => {
             const newData = this.state.data.map((channel, index) => {
                 if (index in CHANNELS) {
