@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { API_ROOT } from './Config';
 import socketIOClient from 'socket.io-client';
 
 import {Channel} from './Channel';
 import './App.css';
 
+const API_ROOT = process.env.API_ROOT || 'http://localhost:8000';
 const CHANNELS = [0, 3];
 const DATA_POINTS_PER_CHART = 60;
 const DIGITS = 3;
