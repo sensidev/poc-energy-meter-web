@@ -5,7 +5,6 @@ import {Channel} from './Channel';
 import './App.css';
 
 const API_ROOT = process.env.REACT_APP_API_ROOT || 'http://localhost:8000';
-const CHANNELS = [0, 3];
 const NUMBER_OF_CHANNELS = 4;
 const DATA_POINTS_PER_CHART = 60;
 const DIGITS = 3;
