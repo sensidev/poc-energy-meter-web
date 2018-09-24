@@ -1,10 +1,10 @@
 import * as React from 'react';
+import { API_ROOT } from './Config';
 import socketIOClient from 'socket.io-client';
 
 import {Channel} from './Channel';
 import './App.css';
 
-const ENDPOINT = 'http://127.0.0.1:8000';
 const CHANNELS = [0, 3];
 const DATA_POINTS_PER_CHART = 60;
 const DIGITS = 3;
@@ -45,7 +45,7 @@ class App extends React.Component {
         data: generateChannels(CHANNELS.length),
     };
 
-    socket = socketIOClient(ENDPOINT);
+    socket = socketIOClient(API_ROOT);
 
     componentDidMount() {
         this.socket.on('channels', data => {
