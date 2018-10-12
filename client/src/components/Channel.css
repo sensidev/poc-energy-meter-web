@@ -1,17 +1,3 @@
-/*  
-    light: #7188e2
-    dark: #1D348C
-*/
-
-.container {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    justify-content: space-around;
-    align-items: center;
-    overflow: hidden;
-}
-
 .channel {
     flex: 1;
     display: flex;
