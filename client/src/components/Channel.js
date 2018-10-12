@@ -1,10 +1,10 @@
-import * as React from 'react';
-import {Line} from 'react-chartjs-2';
+import React from 'react';
+import { Line } from 'react-chartjs-2';
 import 'chartjs-plugin-datalabels';
 
-import './App.css';
+import './Channel.css';
 
-export const Channel = ({chartData}) => {
+export const Channel = ({ chartData }) => {
     const options = {
         legend: {
             display: false
@@ -25,7 +25,7 @@ export const Channel = ({chartData}) => {
             ],
             yAxes: [
                 {
-                    ticks: {min: 0, max: 17}, // fix preventing points from being cut off
+                    ticks: { min: 0, max: 17 }, // fix preventing points from being cut off
                     display: false
                 }
             ]
@@ -73,7 +73,7 @@ export const Channel = ({chartData}) => {
     return (
         <div className="channel">
             <div className="chart">
-                <Line data={chartConfig} options={options}/>
+                <Line data={chartConfig} options={options} />
             </div>
 
             <div className="panel">
