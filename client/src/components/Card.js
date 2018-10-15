@@ -5,7 +5,12 @@ import styled from 'styled-components';
 
 import { BarChart } from './BarChart';
 import { Icons } from '../theme';
-import { getMeasurementUnit, updateChartData, STATUS } from '../helpers';
+import {
+    getMeasurementUnit,
+    updateChartData,
+    STATUS,
+    DIGITS
+} from '../helpers';
 
 export class Card extends React.Component {
     state = {
@@ -23,11 +28,12 @@ export class Card extends React.Component {
             value: 0,
             timestamp: new Date(Date.now())
         },
+        energy: 0,
         chartData: []
     };
 
     static getDerivedStateFromProps(nextProps, currentState) {
-        const { value } = nextProps.item;
+        const { value, key } = nextProps.item;
         const { count, sum, min, max, chartData } = currentState;
 
         if (count === 0) {
@@ -46,6 +52,7 @@ export class Card extends React.Component {
                     value,
                     timestamp: new Date(Date.now())
                 },
+                energy: key === 'en' ? value : 0,
                 chartData: updateChartData(chartData, value)
             };
         } else {
@@ -70,6 +77,10 @@ export class Card extends React.Component {
                     value: (sum / count).toFixed(2),
                     timestamp: new Date(Date.now())
                 },
+                energy:
+                    key === 'en'
+                        ? currentState.energy + value
+                        : currentState.energy,
                 chartData: updateChartData(chartData, value)
             };
         }
@@ -77,9 +88,12 @@ export class Card extends React.Component {
 
     render() {
         const { key, title, value, status } = this.props.item;
-        const { min, avg, max } = this.state;
+        const { min, avg, max, energy } = this.state;
 
+        const fixedEnergy = +energy.toFixed(DIGITS);
+        const transformedEnergy = getMeasurementUnit('en', fixedEnergy);
         const transformedValue = getMeasurementUnit(key, value);
+
         const minValue = getMeasurementUnit(key, min.value);
         const avgValue = getMeasurementUnit(key, avg.value);
         const maxValue = getMeasurementUnit(key, max.value);
@@ -97,7 +111,11 @@ export class Card extends React.Component {
                 <Header>
                     <Info>
                         <Title>{title}</Title>
-                        <Value color={status}>{transformedValue}</Value>
+                        <Value color={status}>
+                            {key === 'en'
+                                ? transformedEnergy
+                                : transformedValue}
+                        </Value>
                     </Info>
                     <StatusContainer>
                         <Timestamp>{lastSample} ago</Timestamp>
@@ -193,6 +211,7 @@ const Status = styled.img`
 `;
 
 const Timestamp = styled.p`
+    color: ${props => props.theme.default};
     margin: 0;
 `;
 

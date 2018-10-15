@@ -3,23 +3,23 @@ import styled, { ThemeProvider } from 'styled-components';
 
 import { Card } from '../components';
 import { theme } from '../theme';
-import { generateData } from '../helpers';
+import { getDataFromJSON, SAMPLING_TIME } from '../helpers';
 
 export class Dashboard extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            data: generateData()
+            data: getDataFromJSON()
         };
     }
 
     componentDidMount() {
-        setInterval(() => this.updateData(), 250);
+        setInterval(() => this.simulateSampling(), SAMPLING_TIME);
     }
 
-    updateData = () => {
-        const data = generateData();
+    simulateSampling = () => {
+        const data = getDataFromJSON();
         this.setState({ data });
     };
 
