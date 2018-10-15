@@ -1,20 +1,15 @@
 import React from 'react';
-import styled, { ThemeProvider } from 'styled-components';
+import styled, {ThemeProvider} from 'styled-components';
 
-import { Card } from '../components';
-import { Icons, theme } from '../theme';
-import {
-    getDataFromJSON,
-    STATUS,
-    generateBear,
-    generateEnergy
-} from '../helpers';
+import {Card} from '../components';
+import {Icons, theme} from '../theme';
+import {generateBear, generateEnergy, getDataFromJSON, STATUS} from '../helpers';
 import socketIOClient from 'socket.io-client';
 
 const API_ROOT = process.env.REACT_APP_API_ROOT || 'http://localhost:8000';
 
 export class Dashboard extends React.Component {
-    socket = socketIOClient(API_ROOT, { path: '/ws' });
+    socket = socketIOClient(API_ROOT, {path: '/ws'});
 
     constructor(props) {
         super(props);
@@ -34,7 +29,7 @@ export class Dashboard extends React.Component {
                         key: 'hum',
                         title: 'Humidity',
                         value: 0,
-                        status: STATUS.Default
+                        status: STATUS.Ok
                     },
                     {
                         key: 'voc',
@@ -46,7 +41,7 @@ export class Dashboard extends React.Component {
                         key: 'co',
                         title: 'CO2',
                         value: 0,
-                        status: STATUS.Critical
+                        status: STATUS.Warning
                     },
                     {
                         key: 'hcho',
@@ -58,7 +53,7 @@ export class Dashboard extends React.Component {
                         key: 'pm',
                         title: 'PM2.5',
                         value: 0,
-                        status: STATUS.Default
+                        status: STATUS.Critical
                     }
                 ]
             },
@@ -81,7 +76,7 @@ export class Dashboard extends React.Component {
                         key: 'en',
                         title: 'Energy',
                         value: 0,
-                        status: STATUS.Default
+                        status: STATUS.Ok
                     }
                 ]
             }
@@ -92,89 +87,110 @@ export class Dashboard extends React.Component {
         let processedState = {};
 
         processedState['timestamp'] = new Date(payload.timestamp * 1000);
+        processedState['values'] = [];
 
-        processedState['values'] = [
-            {
+        if (payload.state.reported.data.temperature !== undefined) {
+            processedState['values'].push({
                 key: 'temp',
                 title: 'Temperature',
-                value: payload.state.reported.data.temperature || null,
+                value: payload.state.reported.data.temperature,
                 status: STATUS.Default
-            },
-            {
+            });
+        }
+        if (payload.state.reported.data.humidity !== undefined) {
+            processedState['values'].push({
                 key: 'hum',
                 title: 'Humidity',
-                value: payload.state.reported.data.humidity || null,
-                status: STATUS.Default
-            },
-            {
+                value: payload.state.reported.data.humidity,
+                status: STATUS.Ok
+            });
+        }
+        if (payload.state.reported.data.TVOC !== undefined) {
+            processedState['values'].push({
                 key: 'voc',
                 title: 'tVOC',
-                value: payload.state.reported.data.TVOC || null,
+                value: payload.state.reported.data.TVOC,
                 status: STATUS.Warning
-            },
-            {
+            });
+        }
+        if (payload.state.reported.data.CO2 !== undefined) {
+            processedState['values'].push({
                 key: 'co',
                 title: 'CO2',
-                value: payload.state.reported.data.CO2 || null,
-                status: STATUS.Critical
-            },
-            {
+                value: payload.state.reported.data.CO2,
+                status: STATUS.Warning
+            });
+        }
+        if (payload.state.reported.data.HCHO !== undefined) {
+            processedState['values'].push({
                 key: 'hcho',
                 title: 'Formaldehyde',
-                value: payload.state.reported.data.HCHO || null,
+                value: payload.state.reported.data.HCHO,
                 status: STATUS.Ok
-            },
-            {
+            });
+        }
+        if (payload.state.reported.data.PM25 !== undefined) {
+            processedState['values'].push({
                 key: 'pm',
                 title: 'PM2.5',
-                value: payload.state.reported.data.PM25 || null,
-                status: STATUS.Default
-            },
-            {
+                value: payload.state.reported.data.PM25,
+                status: STATUS.Critical
+            });
+        }
+        if (payload.state.reported.data.current !== undefined) {
+            processedState['values'].push({
                 key: 'cur',
                 title: 'Current',
-                value: payload.state.reported.data.current || null,
+                value: payload.state.reported.data.current,
                 status: STATUS.Default
-            },
-            {
+            });
+        }
+        if (payload.state.reported.data.power !== undefined) {
+            processedState['values'].push({
                 key: 'pow',
                 title: 'Power',
-                value: payload.state.reported.data.power || null,
+                value: payload.state.reported.data.power,
                 status: STATUS.Default
-            },
-            {
+            });
+        }
+        if (payload.state.reported.data.energy !== undefined) {
+            processedState['values'].push({
                 key: 'en',
                 title: 'Energy',
-                value: payload.state.reported.data.energy || null,
-                status: STATUS.Default
-            }
-        ];
+                value: payload.state.reported.data.energy,
+                status: STATUS.Ok
+            });
+        }
 
         return processedState;
     }
 
     componentDidMount() {
-        // console.log('Connected to ', API_ROOT);
+        console.log('Connected to ', API_ROOT);
 
-        // this.socket.on('payload', payload => {
-        //     console.log('Received state: ', payload);
-        //     const data = this.getProcessedStateFor(payload);
-        //     this.setState({data})
-        // });
+        this.socket.on('payload', payload => {
+            console.log('Received state: ', payload);
+            const data = this.getProcessedStateFor(payload);
+            if (payload.state.reported.type === 'energy') {
+                this.setState({enData: data})
+            } else {
+                this.setState({bearData: data})
+            }
+        });
 
         // TODO: REMOVE ME
-        setInterval(() => this.simulateSampling(), 3000);
+        // setInterval(() => this.simulateSampling(), 3000);
     }
 
     simulateSampling = () => {
         if (this.state.alternate) {
             const data = generateEnergy();
             const enData = getDataFromJSON(data);
-            this.setState({ enData, alternate: false });
+            this.setState({enData, alternate: false});
         } else {
             const data = generateBear();
             const bearData = getDataFromJSON(data);
-            this.setState({ bearData, alternate: true });
+            this.setState({bearData, alternate: true});
         }
     };
 
@@ -199,7 +215,7 @@ export class Dashboard extends React.Component {
                         ))}
                     </List>
                     <Contact>
-                        <Logo src={Icons.logo} />
+                        <Logo src={Icons.logo}/>
                         <Site>sensix.io</Site>
                     </Contact>
                 </Container>

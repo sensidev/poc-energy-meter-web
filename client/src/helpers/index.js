@@ -81,19 +81,19 @@ export const getDataFromJSON = data => {
                     key: 'co',
                     title: 'CO2',
                     value: data.state.reported.data.CO2,
-                    status: STATUS.Critical
+                    status: STATUS.Default
                 },
                 {
                     key: 'hcho',
                     title: 'Formaldehyde',
                     value: data.state.reported.data.HCHO,
-                    status: STATUS.Ok
+                    status: STATUS.Warning
                 },
                 {
                     key: 'pm',
                     title: 'PM2.5',
                     value: data.state.reported.data.PM25,
-                    status: STATUS.Default
+                    status: STATUS.Critical
                 }
             ]
         };
@@ -118,7 +118,7 @@ export const getDataFromJSON = data => {
                 key: 'en',
                 title: 'Energy',
                 value: data.state.reported.data.energy,
-                status: STATUS.Default
+                status: STATUS.Ok
             }
         ]
     };
@@ -142,7 +142,7 @@ export const getMeasurementUnit = (key, value) => {
             return `${value} ppm`;
         }
         case 'pm': {
-            return `${value} ug/m3`;
+            return `${value} ug/\u33a5`;
         }
         case 'cur': {
             return `${value} A`;
