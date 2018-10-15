@@ -3,23 +3,23 @@ import styled, { ThemeProvider } from 'styled-components';
 
 import { Card } from '../components';
 import { theme } from '../theme';
-import { generateData } from '../helpers';
+import { getDataFromJSON, SAMPLING_TIME } from '../helpers';
 
 export class Dashboard extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            data: generateData()
+            data: getDataFromJSON()
         };
     }
 
     componentDidMount() {
-        setInterval(() => this.updateData(), 5000);
+        setInterval(() => this.simulateSampling(), SAMPLING_TIME);
     }
 
-    updateData = () => {
-        const data = generateData();
+    simulateSampling = () => {
+        const data = getDataFromJSON();
         this.setState({ data });
     };
 
@@ -29,9 +29,19 @@ export class Dashboard extends React.Component {
                 <Container>
                     <List>
                         {this.state.data.values.map(item => (
-                            <Card item={item} key={item.key} />
+                            <Card
+                                item={item}
+                                timestamp={this.state.data.timestamp}
+                                key={item.key}
+                            />
                         ))}
                     </List>
+                    <Contact>
+                        <Logo>
+                            <LogoText>Logo</LogoText>
+                        </Logo>
+                        <Site>sensix.io</Site>
+                    </Contact>
                 </Container>
             </ThemeProvider>
         );
@@ -43,8 +53,8 @@ const Container = styled.div`
     padding: 0;
     box-sizing: border-box;
     width: 100vw;
-    height: 100%;
-    background-color: ${props => props.theme.gallery};
+    height: 100vh;
+    background-color: ${props => props.theme.linkWater};
 `;
 
 const List = styled.div`
@@ -52,5 +62,35 @@ const List = styled.div`
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    padding: 2.5%;
+    padding-top: 2rem;
+`;
+
+const Contact = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 1rem 0;
+`;
+
+const Logo = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 7.2rem;
+    width: 7.2rem;
+    border-radius: 50%;
+    background-color: ${props => props.theme.white};
+    margin-bottom: 1rem;
+`;
+
+const LogoText = styled.h3`
+    margin: 0;
+    color: ${props => props.theme.linkWater};
+`;
+
+const Site = styled.h3`
+    margin: 0;
+    color: ${props => props.theme.default};
 `;
