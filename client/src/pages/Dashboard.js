@@ -22,7 +22,7 @@ export class Dashboard extends React.Component {
     getProcessedStateFor(payload) {
         let processedState = {};
 
-        processedState['timestamp'] = new Date(payload.timestamp);
+        processedState['timestamp'] = new Date(payload.timestamp * 1000);
 
         processedState['values'] = [
             {
@@ -40,7 +40,7 @@ export class Dashboard extends React.Component {
             {
                 key: 'voc',
                 title: 'tVOC',
-                value: payload.state.reported.data.VOC || null,
+                value: payload.state.reported.data.TVOC || null,
                 status: STATUS.Warning
             },
             {
