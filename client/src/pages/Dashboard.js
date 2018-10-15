@@ -1,21 +1,90 @@
 import React from 'react';
-import styled, {ThemeProvider} from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 
-import {Card} from '../components';
-import {Icons, theme} from '../theme';
-import {getDataFromJSON, STATUS} from '../helpers';
-import socketIOClient from "socket.io-client";
+import { Card } from '../components';
+import { Icons, theme } from '../theme';
+import {
+    getDataFromJSON,
+    STATUS,
+    generateBear,
+    generateEnergy
+} from '../helpers';
+import socketIOClient from 'socket.io-client';
 
 const API_ROOT = process.env.REACT_APP_API_ROOT || 'http://localhost:8000';
 
 export class Dashboard extends React.Component {
-    socket = socketIOClient(API_ROOT, {path: '/ws'});
+    socket = socketIOClient(API_ROOT, { path: '/ws' });
 
     constructor(props) {
         super(props);
 
         this.state = {
-            data: getDataFromJSON()
+            alternate: false,
+            bearData: {
+                timestamp: new Date(Date.now()),
+                values: [
+                    {
+                        key: 'temp',
+                        title: 'Temperature',
+                        value: 0,
+                        status: STATUS.Default
+                    },
+                    {
+                        key: 'hum',
+                        title: 'Humidity',
+                        value: 0,
+                        status: STATUS.Default
+                    },
+                    {
+                        key: 'voc',
+                        title: 'tVOC',
+                        value: 0,
+                        status: STATUS.Warning
+                    },
+                    {
+                        key: 'co',
+                        title: 'CO2',
+                        value: 0,
+                        status: STATUS.Critical
+                    },
+                    {
+                        key: 'hcho',
+                        title: 'Formaldehyde',
+                        value: 0,
+                        status: STATUS.Ok
+                    },
+                    {
+                        key: 'pm',
+                        title: 'PM2.5',
+                        value: 0,
+                        status: STATUS.Default
+                    }
+                ]
+            },
+            enData: {
+                timestamp: new Date(Date.now()),
+                values: [
+                    {
+                        key: 'cur',
+                        title: 'Current',
+                        value: 0,
+                        status: STATUS.Default
+                    },
+                    {
+                        key: 'pow',
+                        title: 'Power',
+                        value: 0,
+                        status: STATUS.Default
+                    },
+                    {
+                        key: 'en',
+                        title: 'Energy',
+                        value: 0,
+                        status: STATUS.Default
+                    }
+                ]
+            }
         };
     }
 
@@ -85,21 +154,28 @@ export class Dashboard extends React.Component {
     }
 
     componentDidMount() {
-        console.log('Connected to ', API_ROOT);
+        // console.log('Connected to ', API_ROOT);
 
-        this.socket.on('payload', payload => {
-            console.log('Received state: ', payload);
-            const data = this.getProcessedStateFor(payload);
-            this.setState({data})
-        });
+        // this.socket.on('payload', payload => {
+        //     console.log('Received state: ', payload);
+        //     const data = this.getProcessedStateFor(payload);
+        //     this.setState({data})
+        // });
 
         // TODO: REMOVE ME
-        // setInterval(() => this.simulateSampling(), SAMPLING_TIME);
+        setInterval(() => this.simulateSampling(), 3000);
     }
 
     simulateSampling = () => {
-        const data = getDataFromJSON();
-        this.setState({data});
+        if (this.state.alternate) {
+            const data = generateEnergy();
+            const enData = getDataFromJSON(data);
+            this.setState({ enData, alternate: false });
+        } else {
+            const data = generateBear();
+            const bearData = getDataFromJSON(data);
+            this.setState({ bearData, alternate: true });
+        }
     };
 
     render() {
@@ -107,16 +183,23 @@ export class Dashboard extends React.Component {
             <ThemeProvider theme={theme}>
                 <Container>
                     <List>
-                        {this.state.data.values.map(item => (
+                        {this.state.bearData.values.map(item => (
                             <Card
                                 item={item}
-                                timestamp={this.state.data.timestamp}
+                                timestamp={this.state.bearData.timestamp}
+                                key={item.key}
+                            />
+                        ))}
+                        {this.state.enData.values.map(item => (
+                            <Card
+                                item={item}
+                                timestamp={this.state.enData.timestamp}
                                 key={item.key}
                             />
                         ))}
                     </List>
                     <Contact>
-                        <Logo src={Icons.logo}/>
+                        <Logo src={Icons.logo} />
                         <Site>sensix.io</Site>
                     </Contact>
                 </Container>

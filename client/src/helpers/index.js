@@ -13,7 +13,7 @@ const generateRandom = (min, max) => {
     return Math.random() * (max - min) + min;
 };
 
-const generateBear = () => {
+export const generateBear = () => {
     return {
         timestamp: new Date(Date.now()),
         state: {
@@ -35,7 +35,7 @@ const generateBear = () => {
     };
 };
 
-const generateEnergy = () => {
+export const generateEnergy = () => {
     return {
         timestamp: new Date(Date.now()),
         state: {
@@ -54,68 +54,70 @@ const generateEnergy = () => {
     };
 };
 
-export const getDataFromJSON = () => {
-    const bear = generateBear();
-    const energy = generateEnergy();
+export const getDataFromJSON = data => {
+    if (data.state.reported.type === 'Bear') {
+        return {
+            timestamp: data.timestamp,
+            values: [
+                {
+                    key: 'temp',
+                    title: 'Temperature',
+                    value: data.state.reported.data.temperature,
+                    status: STATUS.Default
+                },
+                {
+                    key: 'hum',
+                    title: 'Humidity',
+                    value: data.state.reported.data.humidity,
+                    status: STATUS.Default
+                },
+                {
+                    key: 'voc',
+                    title: 'tVOC',
+                    value: data.state.reported.data.VOC,
+                    status: STATUS.Warning
+                },
+                {
+                    key: 'co',
+                    title: 'CO2',
+                    value: data.state.reported.data.CO2,
+                    status: STATUS.Critical
+                },
+                {
+                    key: 'hcho',
+                    title: 'Formaldehyde',
+                    value: data.state.reported.data.HCHO,
+                    status: STATUS.Ok
+                },
+                {
+                    key: 'pm',
+                    title: 'PM2.5',
+                    value: data.state.reported.data.PM25,
+                    status: STATUS.Default
+                }
+            ]
+        };
+    }
 
     return {
-        timestamp:
-            bear.timestamp >= energy.timestamp
-                ? bear.timestamp
-                : energy.timestamp,
+        timestamp: data.timestamp,
         values: [
-            {
-                key: 'temp',
-                title: 'Temperature',
-                value: bear.state.reported.data.temperature,
-                status: STATUS.Default
-            },
-            {
-                key: 'hum',
-                title: 'Humidity',
-                value: bear.state.reported.data.humidity,
-                status: STATUS.Default
-            },
-            {
-                key: 'voc',
-                title: 'tVOC',
-                value: bear.state.reported.data.VOC,
-                status: STATUS.Warning
-            },
-            {
-                key: 'co',
-                title: 'CO2',
-                value: bear.state.reported.data.CO2,
-                status: STATUS.Critical
-            },
-            {
-                key: 'hcho',
-                title: 'Formaldehyde',
-                value: bear.state.reported.data.HCHO,
-                status: STATUS.Ok
-            },
-            {
-                key: 'pm',
-                title: 'PM2.5',
-                value: bear.state.reported.data.PM25,
-                status: STATUS.Default
-            },
             {
                 key: 'cur',
                 title: 'Current',
-                value: energy.state.reported.data.current,
+                value: data.state.reported.data.current,
                 status: STATUS.Default
             },
             {
                 key: 'pow',
                 title: 'Power',
-                value: energy.state.reported.data.power,
+                value: data.state.reported.data.power,
                 status: STATUS.Default
             },
             {
                 key: 'en',
                 title: 'Energy',
-                value: energy.state.reported.data.energy,
+                value: data.state.reported.data.energy,
                 status: STATUS.Default
             }
         ]

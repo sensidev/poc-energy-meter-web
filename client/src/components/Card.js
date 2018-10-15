@@ -14,6 +14,7 @@ import {
 
 export class Card extends React.Component {
     state = {
+        value: 0,
         count: 0,
         sum: 0,
         min: {
@@ -53,7 +54,11 @@ export class Card extends React.Component {
                     timestamp: new Date(Date.now())
                 },
                 energy: key === 'en' ? value : 0,
-                chartData: updateChartData(chartData, value)
+                chartData:
+                    value !== currentState.value
+                        ? updateChartData(chartData, value)
+                        : chartData,
+                value
             };
         } else {
             return {
@@ -81,9 +86,17 @@ export class Card extends React.Component {
                     key === 'en'
                         ? currentState.energy + value
                         : currentState.energy,
-                chartData: updateChartData(chartData, value)
+                chartData:
+                    value !== currentState.value
+                        ? updateChartData(chartData, value)
+                        : chartData,
+                value
             };
         }
+    }
+
+    shouldComponentUpdate(nextProps) {
+        return nextProps.item !== this.props.item;
     }
 
     render() {
