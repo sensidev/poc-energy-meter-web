@@ -32,8 +32,10 @@ h2 {
 
 h3 {
     font-family: 'IBM Plex Mono', monospace;
+    font-size: 2.1rem;
 }
 
-h4 {
+h6 {
     font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.1rem;
 }

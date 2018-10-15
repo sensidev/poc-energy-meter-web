@@ -2,14 +2,12 @@ import moment from 'moment';
 
 export const theme = {
     white: '#fff',
-    gallery: '#eee',
-    silverChalice: '#aaa',
-    boulder: '#777',
-    emperor: '#555',
-    // Card colors
-    temp: '#fd6d40',
-    hum: '#52d728',
-    default: '#1d348c'
+    linkWater: '#DCE4F7',
+    threshold: '#9AA1B3',
+    critical: '#FF723F',
+    ok: '#93E388',
+    warning: '#FF86CA',
+    default: '#495060'
 };
 
 moment.updateLocale('en', {
@@ -30,3 +28,5 @@ moment.updateLocale('en', {
         yy: '%dy'
     }
 });
+
+export * from './assets';
