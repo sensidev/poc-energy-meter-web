@@ -5,7 +5,7 @@ const socketIo = require('socket.io');
 const deviceModule = require('aws-iot-device-sdk').device;
 const awsCmdLineProcess = require('aws-iot-device-sdk/examples/lib/cmdline');
 
-const subscribeTopic = "$aws/things/EnergyRestart0/shadow/update/accepted";
+const subscribeTopic = "$aws/things/+/shadow/update/accepted";
 
 const serverPort = process.env.PORT || 8000;
 const index = require('./routes/index');
@@ -17,43 +17,9 @@ const server = http.createServer(mqttApp);
 
 const io = socketIo(server, {path: '/ws'});
 
-const DIGITS = 3;
 
 function runServer() {
     server.listen(serverPort, () => console.log('Listening on port', serverPort));
-}
-
-/**
- * Process each channel by:
- *  - adding (x,y) pair for each point.
- *  - round numbers.
- * @param channel the channel to process.
- * @param now current date.
- */
-function getProcessChannel(channel, now) {
-    const points_count = channel['rms_current_data_points'].length;
-    const step = 1000;
-    const timestamp = now.getTime();
-
-    for (let p = 0; p < points_count; p++) {
-        channel['rms_current_data_points'][p] = {
-            'x': timestamp + p * step,
-            'y': round(channel['rms_current_data_points'][p], DIGITS)
-        }
-    }
-
-    channel['energy'] = round(channel['energy'], DIGITS);
-    channel['power'] = round(channel['power'], DIGITS);
-    channel['voltage'] = round(channel['voltage'], DIGITS);
-    channel['rms_min_current'] = round(channel['rms_min_current'], DIGITS);
-    channel['rms_avg_current'] = round(channel['rms_avg_current'], DIGITS);
-    channel['rms_max_current'] = round(channel['rms_max_current'], DIGITS);
-
-    return channel;
-}
-
-function round(value, digits) {
-    return +value.toFixed(digits);
 }
 
 function mqttSubscribe(args) {
@@ -78,34 +44,27 @@ function mqttSubscribe(args) {
     device.subscribe(subscribeTopic);
 
     device.on('connect', function () {
-        console.log('connected');
+        console.log('Connected');
     });
     device.on('close', function () {
-        console.log('closeed');
+        console.log('Closed');
     });
     device.on('reconnect', function () {
-        console.log('reconnected');
+        console.log('Reconnected');
     });
     device.on('offline', function () {
-        console.log('offline');
+        console.log('Offline');
     });
     device.on('error', function (error) {
-        console.log('error', error);
+        console.log('Error', error);
     });
     device.on('message', function (topic, payload) {
-        const now = new Date();
         const payloadStr = payload.toString();
         const payloadJson = JSON.parse(payloadStr);
 
-        console.log('message received for topic:', topic, payloadStr);
+        console.log('Message received for topic:', topic, payloadStr);
 
-        let channels = (((payloadJson || {}).state || {}).reported || {}).channels || [];
-
-        for (let c = 0; c < channels.length; c++) {
-            channels[c] = getProcessChannel(channels[c], now);
-        }
-
-        io.emit('channels', channels);
+        io.emit('payload', payloadJson || {});
     });
 }
 

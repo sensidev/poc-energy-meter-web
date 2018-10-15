@@ -1,11 +1,16 @@
 import React from 'react';
-import styled, { ThemeProvider } from 'styled-components';
+import styled, {ThemeProvider} from 'styled-components';
 
-import { Card } from '../components';
-import { theme, Icons } from '../theme';
-import { getDataFromJSON, SAMPLING_TIME } from '../helpers';
+import {Card} from '../components';
+import {Icons, theme} from '../theme';
+import {getDataFromJSON, STATUS} from '../helpers';
+import socketIOClient from "socket.io-client";
+
+const API_ROOT = process.env.REACT_APP_API_ROOT || 'http://localhost:8000';
 
 export class Dashboard extends React.Component {
+    socket = socketIOClient(API_ROOT, {path: '/ws'});
+
     constructor(props) {
         super(props);
 
@@ -14,13 +19,87 @@ export class Dashboard extends React.Component {
         };
     }
 
+    getProcessedStateFor(payload) {
+        let processedState = {};
+
+        processedState['timestamp'] = new Date(payload.timestamp);
+
+        processedState['values'] = [
+            {
+                key: 'temp',
+                title: 'Temperature',
+                value: payload.state.reported.data.temperature || null,
+                status: STATUS.Default
+            },
+            {
+                key: 'hum',
+                title: 'Humidity',
+                value: payload.state.reported.data.humidity || null,
+                status: STATUS.Default
+            },
+            {
+                key: 'voc',
+                title: 'tVOC',
+                value: payload.state.reported.data.VOC || null,
+                status: STATUS.Warning
+            },
+            {
+                key: 'co',
+                title: 'CO2',
+                value: payload.state.reported.data.CO2 || null,
+                status: STATUS.Critical
+            },
+            {
+                key: 'hcho',
+                title: 'Formaldehyde',
+                value: payload.state.reported.data.HCHO || null,
+                status: STATUS.Ok
+            },
+            {
+                key: 'pm',
+                title: 'PM2.5',
+                value: payload.state.reported.data.PM25 || null,
+                status: STATUS.Default
+            },
+            {
+                key: 'cur',
+                title: 'Current',
+                value: payload.state.reported.data.current || null,
+                status: STATUS.Default
+            },
+            {
+                key: 'pow',
+                title: 'Power',
+                value: payload.state.reported.data.power || null,
+                status: STATUS.Default
+            },
+            {
+                key: 'en',
+                title: 'Energy',
+                value: payload.state.reported.data.energy || null,
+                status: STATUS.Default
+            }
+        ];
+
+        return processedState;
+    }
+
     componentDidMount() {
-        setInterval(() => this.simulateSampling(), SAMPLING_TIME);
+        console.log('Connected to ', API_ROOT);
+
+        this.socket.on('payload', payload => {
+            console.log('Received state: ', payload);
+            const data = this.getProcessedStateFor(payload);
+            this.setState({data})
+        });
+
+        // TODO: REMOVE ME
+        // setInterval(() => this.simulateSampling(), SAMPLING_TIME);
     }
 
     simulateSampling = () => {
         const data = getDataFromJSON();
-        this.setState({ data });
+        this.setState({data});
     };
 
     render() {
@@ -37,7 +116,7 @@ export class Dashboard extends React.Component {
                         ))}
                     </List>
                     <Contact>
-                        <Logo src={Icons.logo} />
+                        <Logo src={Icons.logo}/>
                         <Site>sensix.io</Site>
                     </Contact>
                 </Container>

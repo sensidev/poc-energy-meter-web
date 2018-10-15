@@ -26,7 +26,7 @@ const generateBear = () => {
                     VOC: +generateRandom(5, 10).toFixed(DIGITS),
                     CO2: +generateRandom(400, 500).toFixed(DIGITS),
                     HCHO: +generateRandom(0, 1).toFixed(DIGITS),
-                    'PM2.5': +generateRandom(40, 50).toFixed(DIGITS)
+                    PM25: +generateRandom(40, 50).toFixed(DIGITS)
                 },
                 cmd: 'rx',
                 other: 'values'
@@ -78,7 +78,7 @@ export const getDataFromJSON = () => {
             },
             {
                 key: 'voc',
-                title: 'VOC',
+                title: 'tVOC',
                 value: bear.state.reported.data.VOC,
                 status: STATUS.Warning
             },
@@ -90,14 +90,14 @@ export const getDataFromJSON = () => {
             },
             {
                 key: 'hcho',
-                title: 'HCHO',
+                title: 'Formaldehyde',
                 value: bear.state.reported.data.HCHO,
                 status: STATUS.Ok
             },
             {
                 key: 'pm',
                 title: 'PM2.5',
-                value: bear.state.reported.data['PM2.5'],
+                value: bear.state.reported.data.PM25,
                 status: STATUS.Default
             },
             {
