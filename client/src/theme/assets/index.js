@@ -3,5 +3,6 @@ export const Icons = {
     warning: require('./warning.png'),
     critical: require('./critical.png'),
     top: require('./top.png'),
-    down: require('./down.png')
+    down: require('./down.png'),
+    logo: require('./logo.png')
 };

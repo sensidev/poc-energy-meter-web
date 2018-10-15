@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 
 import { Card } from '../components';
-import { theme } from '../theme';
+import { theme, Icons } from '../theme';
 import { getDataFromJSON, SAMPLING_TIME } from '../helpers';
 
 export class Dashboard extends React.Component {
@@ -37,9 +37,7 @@ export class Dashboard extends React.Component {
                         ))}
                     </List>
                     <Contact>
-                        <Logo>
-                            <LogoText>Logo</LogoText>
-                        </Logo>
+                        <Logo src={Icons.logo} />
                         <Site>sensix.io</Site>
                     </Contact>
                 </Container>
@@ -74,20 +72,11 @@ const Contact = styled.div`
     padding: 1rem 0;
 `;
 
-const Logo = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
+const Logo = styled.img`
     height: 7.2rem;
     width: 7.2rem;
     border-radius: 50%;
-    background-color: ${props => props.theme.white};
     margin-bottom: 1rem;
-`;
-
-const LogoText = styled.h3`
-    margin: 0;
-    color: ${props => props.theme.linkWater};
 `;
 
 const Site = styled.h3`
