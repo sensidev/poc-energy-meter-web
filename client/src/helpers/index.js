@@ -158,26 +158,33 @@ export const getMeasurementUnit = (key, value) => {
     }
 };
 
-export const updateChartData = (data, value) => {
-    if (data.length === 0) {
-        return [
-            {
-                x: new Date(Date.now()),
+export const updateChartData = (nextProps, currentState) => {
+    const {value} = nextProps.item;
+    const {count, chartData} = currentState;
+
+    if (count > 0) {
+        if (chartData.length === 0) {
+            return [
+                {
+                    x: new Date(nextProps.timestamp),
+                    y: value
+                }
+            ];
+        } else if (chartData.length <= NUMBER_OF_BARS) {
+            return [
+                ...chartData,
+                {
+                    x: new Date(nextProps.timestamp),
+                    y: value
+                }
+            ];
+        } else {
+            return chartData.slice(1).concat({
+                x: new Date(nextProps.timestamp),
                 y: value
-            }
-        ];
-    } else if (data.length <= NUMBER_OF_BARS) {
-        return [
-            ...data,
-            {
-                x: new Date(Date.now()),
-                y: value
-            }
-        ];
-    } else {
-        return data.slice(1).concat({
-            x: new Date(Date.now()),
-            y: value
-        });
+            });
+        }
     }
+
+    return [];
 };

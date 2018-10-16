@@ -22,37 +22,37 @@ export class Dashboard extends React.Component {
                     {
                         key: 'temp',
                         title: 'Temperature',
-                        value: 0,
+                        value: '-',
                         status: STATUS.Default
                     },
                     {
                         key: 'hum',
                         title: 'Humidity',
-                        value: 0,
+                        value: '-',
                         status: STATUS.Ok
                     },
                     {
                         key: 'voc',
                         title: 'tVOC',
-                        value: 0,
+                        value: '-',
                         status: STATUS.Warning
                     },
                     {
                         key: 'co',
                         title: 'CO2',
-                        value: 0,
+                        value: '-',
                         status: STATUS.Warning
                     },
                     {
                         key: 'hcho',
                         title: 'Formaldehyde',
-                        value: 0,
+                        value: '-',
                         status: STATUS.Ok
                     },
                     {
                         key: 'pm',
                         title: 'PM2.5',
-                        value: 0,
+                        value: '-',
                         status: STATUS.Critical
                     }
                 ]
@@ -63,19 +63,19 @@ export class Dashboard extends React.Component {
                     {
                         key: 'cur',
                         title: 'Current',
-                        value: 0,
+                        value: '-',
                         status: STATUS.Default
                     },
                     {
                         key: 'pow',
                         title: 'Power',
-                        value: 0,
+                        value: '-',
                         status: STATUS.Default
                     },
                     {
                         key: 'en',
                         title: 'Energy',
-                        value: 0,
+                        value: '-',
                         status: STATUS.Ok
                     }
                 ]
@@ -113,20 +113,20 @@ export class Dashboard extends React.Component {
                 status: STATUS.Warning
             });
         }
-        if (payload.state.reported.data.CO2 !== undefined) {
-            processedState['values'].push({
-                key: 'co',
-                title: 'CO2',
-                value: payload.state.reported.data.CO2,
-                status: STATUS.Warning
-            });
-        }
         if (payload.state.reported.data.HCHO !== undefined) {
             processedState['values'].push({
                 key: 'hcho',
                 title: 'Formaldehyde',
                 value: payload.state.reported.data.HCHO,
                 status: STATUS.Ok
+            });
+        }
+        if (payload.state.reported.data.CO2 !== undefined) {
+            processedState['values'].push({
+                key: 'co',
+                title: 'CO2',
+                value: payload.state.reported.data.CO2,
+                status: STATUS.Warning
             });
         }
         if (payload.state.reported.data.PM25 !== undefined) {
@@ -172,9 +172,9 @@ export class Dashboard extends React.Component {
             console.log('Received state: ', payload);
             const data = this.getProcessedStateFor(payload);
             if (payload.state.reported.type === 'energy') {
-                this.setState({enData: data})
+                this.setState({enData: data, alternate: false})
             } else {
-                this.setState({bearData: data})
+                this.setState({bearData: data, alternate: true})
             }
         });
 

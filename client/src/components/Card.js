@@ -10,7 +10,7 @@ import {Timestamp} from "./Timestamp";
 
 export class Card extends React.Component {
     state = {
-        value: 0,
+        value: '-',
         count: 0,
         sum: 0,
         min: {
@@ -23,7 +23,6 @@ export class Card extends React.Component {
         },
         avg: {
             value: '-',
-            timestamp: '-'
         },
         energy: 0,
         chartData: []
@@ -69,50 +68,46 @@ export class Card extends React.Component {
         return min;
     }
 
-    static getDerivedStateFromProps(nextProps, currentState) {
-        const {value, key} = nextProps.item;
-        const {count, sum, chartData} = currentState;
+    static getEnergy(nextProps, currentState) {
+        const {value, key} = nextProps.item.value;
 
-        if (count === 0) {
-            return {
-                count: 1,
-                sum: value,
-                min: {
-                    value: '-',
-                    timestamp: '-'
-                },
-                max: {
-                    value: '-',
-                    timestamp: '-'
-                },
-                avg: {
-                    value: '-',
-                    timestamp: '-'
-                },
-                energy: key === 'en' ? value : 0,
-                chartData: []
-            };
-        } else {
-            return {
-                count: count + 1,
-                sum: sum + value,
-                min: Card.getMin(nextProps, currentState),
-                max: Card.getMax(nextProps, currentState),
-                avg: {
-                    value: (sum / count).toFixed(2),
-                    timestamp: new Date(Date.now())
-                },
-                energy:
-                    key === 'en'
-                        ? currentState.energy + value
-                        : currentState.energy,
-                chartData:
-                    value !== currentState.value
-                        ? updateChartData(chartData, value)
-                        : chartData,
-                value
-            };
+        if (!isNaN(value)) {
+            if (key === 'en') {
+                return currentState.energy + value
+            }
         }
+
+        return currentState.energy
+    }
+
+    static getAvg(nextProps, currentState) {
+        const {value} = nextProps.item;
+        const {sum, count} = currentState;
+
+        if (!isNaN(value)) {
+            return {
+                value: +(sum / count).toFixed(2),
+            }
+        }
+
+        return {
+            value: '-'
+        }
+    }
+
+    static getDerivedStateFromProps(nextProps, currentState) {
+        const {value} = nextProps.item;
+        const {count, sum} = currentState;
+
+        return {
+            count: !isNaN(value) ? count + 1 : count,
+            sum: sum + (!isNaN(value) ? value : 0),
+            min: Card.getMin(nextProps, currentState),
+            max: Card.getMax(nextProps, currentState),
+            avg: Card.getAvg(nextProps, currentState),
+            energy: Card.getEnergy(nextProps, currentState),
+            chartData: updateChartData(nextProps, currentState)
+        };
     }
 
     shouldComponentUpdate(nextProps) {
