@@ -3,10 +3,15 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import {BarChart} from './BarChart';
-import {Icons} from '../theme';
-import {DIGITS, getMeasurementUnit, STATUS, updateChartData} from '../helpers';
-import {Timestamp} from "./Timestamp";
+import { BarChart } from './BarChart';
+import { Icons } from '../theme';
+import {
+    DIGITS,
+    getMeasurementUnit,
+    STATUS,
+    updateChartData
+} from '../helpers';
+import { Timestamp } from './Timestamp';
 
 export class Card extends React.Component {
     state = {
@@ -22,7 +27,7 @@ export class Card extends React.Component {
             timestamp: '-'
         },
         avg: {
-            value: '-',
+            value: '-'
         },
         energy: 0,
         chartData: []
@@ -41,7 +46,7 @@ export class Card extends React.Component {
 
         if (!isNaN(currentValue)) {
             if (nextValue <= currentValue) {
-                max = currentState.max
+                max = currentState.max;
             }
         }
 
@@ -61,43 +66,42 @@ export class Card extends React.Component {
 
         if (!isNaN(currentValue)) {
             if (nextValue >= currentValue) {
-                min = currentState.min
+                min = currentState.min;
             }
-
         }
         return min;
     }
 
     static getEnergy(nextProps, currentState) {
-        const {value, key} = nextProps.item.value;
+        const { value, key } = nextProps.item;
 
         if (!isNaN(value)) {
             if (key === 'en') {
-                return currentState.energy + value
+                return currentState.energy + value;
             }
         }
 
-        return currentState.energy
+        return currentState.energy;
     }
 
     static getAvg(nextProps, currentState) {
-        const {value} = nextProps.item;
-        const {sum, count} = currentState;
+        const { value } = nextProps.item;
+        const { sum, count } = currentState;
 
         if (!isNaN(value)) {
             return {
-                value: +(sum / count).toFixed(2),
-            }
+                value: +(sum / count).toFixed(2)
+            };
         }
 
         return {
             value: '-'
-        }
+        };
     }
 
     static getDerivedStateFromProps(nextProps, currentState) {
-        const {value} = nextProps.item;
-        const {count, sum} = currentState;
+        const { value } = nextProps.item;
+        const { count, sum } = currentState;
 
         return {
             count: !isNaN(value) ? count + 1 : count,
@@ -115,8 +119,8 @@ export class Card extends React.Component {
     }
 
     render() {
-        const {key, title, value, status} = this.props.item;
-        const {min, avg, max, energy} = this.state;
+        const { key, title, value, status } = this.props.item;
+        const { min, avg, max, energy } = this.state;
 
         const fixedEnergy = +energy.toFixed(DIGITS);
         const transformedEnergy = getMeasurementUnit('en', fixedEnergy);
@@ -138,20 +142,24 @@ export class Card extends React.Component {
                         </Value>
                     </Info>
                     <StatusContainer>
-                        <Timestamp timestamp={this.props.timestamp}/>
+                        <Timestamp timestamp={this.props.timestamp} />
                         {status !== STATUS.Default && (
-                            <Status src={Icons[status]}/>
+                            <Status src={Icons[status]} />
                         )}
                     </StatusContainer>
                 </Header>
                 <ChartContainer color={status}>
-                    <BarChart chartData={this.state.chartData} color={status}/>
+                    <BarChart
+                        chartData={this.state.chartData}
+                        timestamp={this.props.timestamp}
+                        color={status}
+                    />
                 </ChartContainer>
                 <Footer>
                     <Statistics>
                         <Details>
                             <Threshold>LOWEST</Threshold>
-                            <Arrow src={Icons.down}/>
+                            <Arrow src={Icons.down} />
                             <StyledDate>{this.state.min.timestamp}</StyledDate>
                         </Details>
                         <Stat>{minValue}</Stat>
@@ -165,8 +173,10 @@ export class Card extends React.Component {
                     <Statistics>
                         <Details>
                             <Threshold color={status}>HIGHEST</Threshold>
-                            <Arrow src={Icons.top}/>
-                            <StyledDate color={status}>{this.state.max.timestamp}</StyledDate>
+                            <Arrow src={Icons.top} />
+                            <StyledDate color={status}>
+                                {this.state.max.timestamp}
+                            </StyledDate>
                         </Details>
                         <Stat color={status}>{maxValue}</Stat>
                     </Statistics>
@@ -176,14 +186,12 @@ export class Card extends React.Component {
     }
 }
 
-Card
-    .propTypes = {
+Card.propTypes = {
     item: PropTypes.object.isRequired,
     timestamp: PropTypes.instanceOf(Date)
 };
 
-const
-    Container = styled.div`
+const Container = styled.div`
     display: flex;
     flex-direction: column;
     height: 25vh;
@@ -194,28 +202,24 @@ const
     padding: 1rem 2rem;
 `;
 
-const
-    Header = styled.div`
+const Header = styled.div`
     display: flex;
     flex: 1;
     padding-bottom: 1rem;
 `;
 
-const
-    Info = styled.div`
+const Info = styled.div`
     display: flex;
     flex-direction: column;
     flex: 10;
 `;
 
-const
-    Title = styled.p`
+const Title = styled.p`
     color: ${props => props.theme.default};
     margin: 0;
 `;
 
-const
-    Value = styled.h3`
+const Value = styled.h3`
     color: ${props =>
         props.theme[props.color]
             ? props.theme[props.color]
@@ -223,51 +227,44 @@ const
     margin: 0;
 `;
 
-const
-    StatusContainer = styled.div`
+const StatusContainer = styled.div`
     flex: 2;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
 `;
 
-const
-    Status = styled.img`
+const Status = styled.img`
     width: 2rem;
     height: 2rem;
     margin-top: 1rem;
 `;
 
-const
-    ChartContainer = styled.div`
+const ChartContainer = styled.div`
     flex: 2;
     transform: scaleX(1.2);
 `;
 
-const
-    Footer = styled.div`
+const Footer = styled.div`
     display: flex;
     justify-content: space-between;
     flex: 1;
 `;
 
-const
-    Statistics = styled.div`
+const Statistics = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 `;
 
-const
-    Details = styled.div`
+const Details = styled.div`
     display: flex;
     justify-content: center;
     align-items: flex-end;
 `;
 
-const
-    Threshold = styled.h6`
+const Threshold = styled.h6`
     color: ${props =>
         props.theme[props.color]
             ? props.theme[props.color]
@@ -275,16 +272,14 @@ const
     margin: 0;
 `;
 
-const
-    Arrow = styled.img`
+const Arrow = styled.img`
     width: 1rem;
     height: 1rem;
     margin: 0 0.5rem;
     margin-bottom: 0.1rem;
 `;
 
-const
-    StyledDate = styled.h6`
+const StyledDate = styled.h6`
     color: ${props =>
         props.theme[props.color]
             ? props.theme[props.color]
@@ -292,8 +287,7 @@ const
     margin: 0;
 `;
 
-const
-    Stat = styled.p`
+const Stat = styled.p`
     color: ${props =>
         props.theme[props.color]
             ? props.theme[props.color]

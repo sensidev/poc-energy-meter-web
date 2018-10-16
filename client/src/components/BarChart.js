@@ -1,11 +1,12 @@
 import React from 'react';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import { Bar } from 'react-chartjs-2';
 import 'chartjs-plugin-datalabels';
 
 import { theme } from '../theme';
 
-export const BarChart = ({ chartData, color }) => {
+export const BarChart = ({ chartData, timestamp, color }) => {
     const options = {
         legend: {
             display: false
@@ -38,7 +39,15 @@ export const BarChart = ({ chartData, color }) => {
         tooltips: {
             mode: 'nearest',
             intersect: false,
-            callbacks: {}
+            callbacks: {
+                title: () => {
+                    return (
+                        moment(timestamp)
+                            .fromNow()
+                            .toLocaleLowerCase() + ' ago'
+                    );
+                }
+            }
         },
         hover: {
             mode: 'nearest',
@@ -60,5 +69,6 @@ export const BarChart = ({ chartData, color }) => {
 
 BarChart.propTypers = {
     chartData: PropTypes.array.isRequired,
+    timestamp: PropTypes.instanceOf(Date),
     color: PropTypes.string
 };

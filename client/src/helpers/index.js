@@ -1,5 +1,6 @@
+import moment from 'moment';
+
 const NUMBER_OF_BARS = 34;
-export const SAMPLING_TIME = 5000;
 export const DIGITS = 2;
 
 export const STATUS = {
@@ -159,14 +160,14 @@ export const getMeasurementUnit = (key, value) => {
 };
 
 export const updateChartData = (nextProps, currentState) => {
-    const {value} = nextProps.item;
-    const {count, chartData} = currentState;
+    const { value } = nextProps.item;
+    const { count, chartData } = currentState;
 
     if (count > 0) {
         if (chartData.length === 0) {
             return [
                 {
-                    x: new Date(nextProps.timestamp),
+                    x: moment(),
                     y: value
                 }
             ];
@@ -174,13 +175,13 @@ export const updateChartData = (nextProps, currentState) => {
             return [
                 ...chartData,
                 {
-                    x: new Date(nextProps.timestamp),
+                    x: moment(chartData[chartData.length - 1].x).add(5, 's'),
                     y: value
                 }
             ];
         } else {
             return chartData.slice(1).concat({
-                x: new Date(nextProps.timestamp),
+                x: moment(chartData[chartData.length - 1].x).add(5, 's'),
                 y: value
             });
         }

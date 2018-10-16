@@ -1,15 +1,20 @@
 import React from 'react';
-import styled, {ThemeProvider} from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 
-import {Card} from '../components';
-import {Icons, theme} from '../theme';
-import {generateBear, generateEnergy, getDataFromJSON, STATUS} from '../helpers';
+import { Card } from '../components';
+import { Icons, theme } from '../theme';
+import {
+    generateBear,
+    generateEnergy,
+    getDataFromJSON,
+    STATUS
+} from '../helpers';
 import socketIOClient from 'socket.io-client';
 
 const API_ROOT = process.env.REACT_APP_API_ROOT || 'http://localhost:8000';
 
 export class Dashboard extends React.Component {
-    socket = socketIOClient(API_ROOT, {path: '/ws'});
+    socket = socketIOClient(API_ROOT, { path: '/ws' });
 
     constructor(props) {
         super(props);
@@ -172,25 +177,25 @@ export class Dashboard extends React.Component {
             console.log('Received state: ', payload);
             const data = this.getProcessedStateFor(payload);
             if (payload.state.reported.type === 'energy') {
-                this.setState({enData: data, alternate: false})
+                this.setState({ enData: data, alternate: false });
             } else {
-                this.setState({bearData: data, alternate: true})
+                this.setState({ bearData: data, alternate: true });
             }
         });
 
         // TODO: REMOVE ME
-        // setInterval(() => this.simulateSampling(), 3000);
+        // setInterval(() => this.simulateSampling(), 1000);
     }
 
     simulateSampling = () => {
         if (this.state.alternate) {
             const data = generateEnergy();
             const enData = getDataFromJSON(data);
-            this.setState({enData, alternate: false});
+            this.setState({ enData, alternate: false });
         } else {
             const data = generateBear();
             const bearData = getDataFromJSON(data);
-            this.setState({bearData, alternate: true});
+            this.setState({ bearData, alternate: true });
         }
     };
 
@@ -215,7 +220,7 @@ export class Dashboard extends React.Component {
                         ))}
                     </List>
                     <Contact>
-                        <Logo src={Icons.logo}/>
+                        <Logo src={Icons.logo} />
                         <Site>sensix.io</Site>
                     </Contact>
                 </Container>
