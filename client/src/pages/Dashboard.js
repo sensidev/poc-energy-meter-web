@@ -98,7 +98,8 @@ export class Dashboard extends React.Component {
             processedState['values'].push({
                 key: 'temp',
                 title: 'Temperature',
-                value: payload.state.reported.data.temperature,
+                // Uber hack, to compensate the heat from inside the enclosure :)
+                value: payload.state.reported.data.temperature - 4,
                 status: STATUS.Default
             });
         }

@@ -147,7 +147,6 @@ export class Card extends React.Component {
                 <ChartContainer color={status}>
                     <BarChart
                         chartData={this.state.chartData}
-                        timestamp={this.props.timestamp}
                         color={status}
                     />
                 </ChartContainer>

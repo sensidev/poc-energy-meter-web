@@ -6,7 +6,7 @@ import 'chartjs-plugin-datalabels';
 
 import { theme } from '../theme';
 
-export const BarChart = ({ chartData, timestamp, color }) => {
+export const BarChart = ({ chartData, color }) => {
     const options = {
         legend: {
             display: false
@@ -15,6 +15,7 @@ export const BarChart = ({ chartData, timestamp, color }) => {
             xAxes: [
                 {
                     type: 'time',
+                    distribution: 'series',
                     display: false,
                     offset: true,
                     barThickness: 3
@@ -37,17 +38,8 @@ export const BarChart = ({ chartData, timestamp, color }) => {
             }
         },
         tooltips: {
-            mode: 'nearest',
             intersect: false,
-            callbacks: {
-                title: () => {
-                    return (
-                        moment(timestamp)
-                            .fromNow()
-                            .toLocaleLowerCase() + ' ago'
-                    );
-                }
-            }
+            callbacks: {}
         },
         hover: {
             mode: 'nearest',
@@ -69,6 +61,5 @@ export const BarChart = ({ chartData, timestamp, color }) => {
 
 BarChart.propTypers = {
     chartData: PropTypes.array.isRequired,
-    timestamp: PropTypes.instanceOf(Date),
     color: PropTypes.string
 };
