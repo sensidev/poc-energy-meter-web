@@ -40,8 +40,6 @@ export class Card extends React.Component {
         let max = {
             value: nextValue,
             timestamp: moment(nextProps.timestamp)
-                .fromNow()
-                .toLocaleUpperCase()
         };
 
         if (!isNaN(currentValue)) {
@@ -60,8 +58,6 @@ export class Card extends React.Component {
         let min = {
             value: nextValue,
             timestamp: moment(nextProps.timestamp)
-                .fromNow()
-                .toLocaleUpperCase()
         };
 
         if (!isNaN(currentValue)) {
@@ -160,7 +156,9 @@ export class Card extends React.Component {
                         <Details>
                             <Threshold>LOWEST</Threshold>
                             <Arrow src={Icons.down} />
-                            <StyledDate>{this.state.min.timestamp}</StyledDate>
+                            <StyledDate>
+                                {this.state.min.timestamp.fromNow().toLocaleUpperCase()}
+                            </StyledDate>
                         </Details>
                         <Stat>{minValue}</Stat>
                     </Statistics>
@@ -175,7 +173,7 @@ export class Card extends React.Component {
                             <Threshold color={status}>HIGHEST</Threshold>
                             <Arrow src={Icons.top} />
                             <StyledDate color={status}>
-                                {this.state.max.timestamp}
+                                {this.state.max.timestamp.fromNow().toLocaleUpperCase()}
                             </StyledDate>
                         </Details>
                         <Stat color={status}>{maxValue}</Stat>
