@@ -5,7 +5,12 @@ import 'chartjs-plugin-datalabels';
 
 import { theme } from '../theme';
 
-export const BarChart = ({ chartData, color, barThickness }) => {
+export const BarChart = ({
+    chartData,
+    color,
+    barThickness,
+    numberOfSamples
+}) => {
     const options = {
         legend: {
             display: false
@@ -46,10 +51,22 @@ export const BarChart = ({ chartData, color, barThickness }) => {
         }
     };
 
+    const startingPosition = chartData.length - numberOfSamples - 1;
+    const hasHistory =
+        chartData.length > numberOfSamples && chartData[startingPosition].y;
+
     const chartConfig = {
         datasets: [
             {
-                backgroundColor: theme[color] ? theme[color] : theme.default,
+                backgroundColor: chartData.map((e, index) => {
+                    if (hasHistory && index > startingPosition) {
+                        return theme.pink;
+                    } else if (theme[color]) {
+                        return theme[color];
+                    } else {
+                        return theme.default;
+                    }
+                }),
                 data: chartData
             }
         ]
@@ -62,5 +79,6 @@ BarChart.propTypers = {
     chartData: PropTypes.array.isRequired,
     timestamp: PropTypes.instanceOf(Date),
     color: PropTypes.string,
-    barThickness: PropTypes.number
+    barThickness: PropTypes.number,
+    numberOfSamples: PropTypes.number
 };

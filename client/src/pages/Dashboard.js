@@ -7,6 +7,8 @@ import {
     generateBear,
     generateEnergy,
     getDataFromJSON,
+    updateChartData,
+    getMeasurementUnit,
     STATUS
 } from '../helpers';
 import socketIOClient from 'socket.io-client';
@@ -205,7 +207,7 @@ export class Dashboard extends React.Component {
             <ThemeProvider theme={theme}>
                 <Container>
                     <List>
-                        {this.state.bearData.values.map(item => (
+                        {this.state.bearData.values.map((item, index) => (
                             <Card
                                 item={item}
                                 timestamp={this.state.bearData.timestamp}
@@ -213,9 +215,12 @@ export class Dashboard extends React.Component {
                                 width="30%"
                                 height="28vh"
                                 chartScaleX={1.2}
+                                getUnitHandler={getMeasurementUnit}
+                                updateChartHandler={updateChartData}
+                                middle={(index + 2) % 3 === 0}
                             />
                         ))}
-                        {this.state.enData.values.map(item => (
+                        {this.state.enData.values.map((item, index) => (
                             <Card
                                 item={item}
                                 timestamp={this.state.enData.timestamp}
@@ -223,6 +228,9 @@ export class Dashboard extends React.Component {
                                 width="30%"
                                 height="28vh"
                                 chartScaleX={1.2}
+                                getUnitHandler={getMeasurementUnit}
+                                updateChartHandler={updateChartData}
+                                middle={(index + 2) % 3 === 0}
                             />
                         ))}
                     </List>

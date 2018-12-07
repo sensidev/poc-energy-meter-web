@@ -22,7 +22,18 @@ export class Device extends React.Component {
         });
     };
 
+    onSubmit = () => {
+        if (
+            this.state.values.device.length === 0 ||
+            this.state.values.tag.length === 0
+        ) {
+            alert('All fields are required.');
+        } else {
+        }
+    };
+
     render() {
+        console.log(this.props);
         return (
             <ThemeProvider theme={theme}>
                 <Container>
@@ -43,7 +54,9 @@ export class Device extends React.Component {
                         onChange={this.onChange}
                     />
                     <SamplesToSendContainer>
-                        <SampleLabel>Samples to send per unit</SampleLabel>
+                        <SampleLabelContainer>
+                            <SampleLabel>Samples to send per unit</SampleLabel>
+                        </SampleLabelContainer>
                         <SampleInput
                             type="number"
                             value={this.state.values.samplesToSendPerUnit}
@@ -74,16 +87,22 @@ const Container = styled.div`
 
 const SamplesToSendContainer = styled.div`
     display: flex;
-    align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     flex-direction: row;
-    width: 100%;
+    width: 25%;
+    height: 6rem;
+`;
+
+const SampleLabelContainer = styled.div`
+    color: ${props => props.theme.default};
+    padding-left: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;
 
 const SampleLabel = styled.h3`
-    width: 6%;
-    color: ${props => props.theme.white};
-    margin-right: 3rem;
+    color: ${props => props.theme.default};
 `;
 
 const SampleInput = styled.input`
@@ -129,4 +148,9 @@ const Button = styled.div`
     align-items: center;
     font-size: 1.8rem;
     margin-top: 2rem;
+
+    &:hover {
+        cursor: pointer;
+        box-shadow: 0.2rem 0.2rem 1.5rem 0 rgba(0, 0, 0, 0.5);
+    }
 `;

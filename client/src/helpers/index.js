@@ -255,110 +255,118 @@ export const generate3PhaseMeter = () => {
     };
 };
 
-export const map3PhaseMeter = data => {
-    return {
-        timestamp: data.timestamp,
-        values: [
-            {
-                key: 'RP',
-                title: 'Phase R - avg power',
-                value: data.state.reported.data.average['R'].Pavg,
-                samples: data.state.reported.data.samples,
-                status: STATUS.Default
-            },
-            {
-                key: 'RI',
-                title: 'Phase R - rms intensity',
-                value: data.state.reported.data.average['R'].Irms,
-                samples: data.state.reported.data.samples,
-                status: STATUS.Default
-            },
-            {
-                key: 'RV',
-                title: 'Phase R - rms voltage',
-                value: data.state.reported.data.average['R'].Vrms,
-                samples: data.state.reported.data.samples,
-                status: STATUS.Default
-            },
-            {
-                key: 'SP',
-                title: 'Phase S - avg power',
-                value: data.state.reported.data.average['S'].Pavg,
-                samples: data.state.reported.data.samples,
-                status: STATUS.Default
-            },
-            {
-                key: 'SI',
-                title: 'Phase S - rms intensity',
-                value: data.state.reported.data.average['S'].Irms,
-                samples: data.state.reported.data.samples,
-                status: STATUS.Default
-            },
-            {
-                key: 'SV',
-                title: 'Phase S - rms voltage',
-                value: data.state.reported.data.average['S'].Vrms,
-                samples: data.state.reported.data.samples,
-                status: STATUS.Default
-            },
-            {
-                key: 'TP',
-                title: 'Phase T - avg power',
-                value: data.state.reported.data.average['T'].Pavg,
-                samples: data.state.reported.data.samples,
-                status: STATUS.Default
-            },
-            {
-                key: 'TI',
-                title: 'Phase T - rms intensity',
-                value: data.state.reported.data.average['T'].Irms,
-                samples: data.state.reported.data.samples,
-                status: STATUS.Default
-            },
-            {
-                key: 'TV',
-                title: 'Phase T - rms voltage',
-                value: data.state.reported.data.average['T'].Vrms,
-                samples: data.state.reported.data.samples,
-                status: STATUS.Default
-            },
-            {
-                key: 'TEMP',
-                title: 'Temperature - average on all 3 phases',
-                value: data.state.reported.data.average.temp,
-                samples: data.state.reported.data.samples,
-                status: STATUS.Default
-            },
-            {
-                key: 'VREF',
-                title: 'V Ref - on all 3 phases',
-                value: data.state.reported.data.average.Vref,
-                samples: data.state.reported.data.samples,
-                status: STATUS.Default
-            }
-            // {
-            //     key: 'TOTALP',
-            //     title: 'Total Power - on all 3 phases',
-            //     value: data.state.reported.data.average.totalP,
-            //     samples: data.state.reported.data.samples,
-            //     status: STATUS.Default
-            // },
-            // {
-            //     key: 'POWERFACTOR',
-            //     title: 'Power Factor - on all 3 phases',
-            //     value: data.state.reported.data.average.powerFactor,
-            //     samples: data.state.reported.data.samples,
-            //     status: STATUS.Default
-            // },
-            // {
-            //     key: 'TOTALE',
-            //     title: 'Total Energy - on all 3 phases',
-            //     value: data.state.reported.data.average.totalE,
-            //     samples: data.state.reported.data.samples,
-            //     status: STATUS.Default
-            // }
-        ]
-    };
+export const map3PhaseMeter = (data, total) => {
+    if (total) {
+        return {
+            timestamp: data.timestamp,
+            values: [
+                {
+                    key: 'TOTALP',
+                    title: 'Total Power - on all 3 phases',
+                    value: data.state.reported.data.average.totalP,
+                    samples: data.state.reported.data.samples,
+                    status: STATUS.Default
+                },
+                {
+                    key: 'POWERFACTOR',
+                    title: 'Power Factor - on all 3 phases',
+                    value: data.state.reported.data.average.powerFactor,
+                    samples: data.state.reported.data.samples,
+                    status: STATUS.Default
+                },
+                {
+                    key: 'TOTALE',
+                    title: 'Total Energy - on all 3 phases',
+                    value: data.state.reported.data.average.totalE,
+                    samples: data.state.reported.data.samples,
+                    status: STATUS.Default
+                }
+            ]
+        };
+    } else {
+        return {
+            timestamp: data.timestamp,
+            values: [
+                {
+                    key: 'RP',
+                    title: 'Phase R - avg power',
+                    value: data.state.reported.data.average['R'].Pavg,
+                    samples: data.state.reported.data.samples,
+                    status: STATUS.Default
+                },
+                {
+                    key: 'RI',
+                    title: 'Phase R - rms intensity',
+                    value: data.state.reported.data.average['R'].Irms,
+                    samples: data.state.reported.data.samples,
+                    status: STATUS.Default
+                },
+                {
+                    key: 'RV',
+                    title: 'Phase R - rms voltage',
+                    value: data.state.reported.data.average['R'].Vrms,
+                    samples: data.state.reported.data.samples,
+                    status: STATUS.Default
+                },
+                {
+                    key: 'SP',
+                    title: 'Phase S - avg power',
+                    value: data.state.reported.data.average['S'].Pavg,
+                    samples: data.state.reported.data.samples,
+                    status: STATUS.Default
+                },
+                {
+                    key: 'SI',
+                    title: 'Phase S - rms intensity',
+                    value: data.state.reported.data.average['S'].Irms,
+                    samples: data.state.reported.data.samples,
+                    status: STATUS.Default
+                },
+                {
+                    key: 'SV',
+                    title: 'Phase S - rms voltage',
+                    value: data.state.reported.data.average['S'].Vrms,
+                    samples: data.state.reported.data.samples,
+                    status: STATUS.Default
+                },
+                {
+                    key: 'TP',
+                    title: 'Phase T - avg power',
+                    value: data.state.reported.data.average['T'].Pavg,
+                    samples: data.state.reported.data.samples,
+                    status: STATUS.Default
+                },
+                {
+                    key: 'TI',
+                    title: 'Phase T - rms intensity',
+                    value: data.state.reported.data.average['T'].Irms,
+                    samples: data.state.reported.data.samples,
+                    status: STATUS.Default
+                },
+                {
+                    key: 'TV',
+                    title: 'Phase T - rms voltage',
+                    value: data.state.reported.data.average['T'].Vrms,
+                    samples: data.state.reported.data.samples,
+                    status: STATUS.Default
+                },
+                {
+                    key: 'TEMP',
+                    title: 'Temperature - average on all 3 phases',
+                    value: data.state.reported.data.average.temp,
+                    samples: data.state.reported.data.samples,
+                    status: STATUS.Default
+                },
+                {
+                    key: 'VREF',
+                    title: 'V Ref - on all 3 phases',
+                    value: data.state.reported.data.average.Vref,
+                    samples: data.state.reported.data.samples,
+                    status: STATUS.Default
+                }
+            ]
+        };
+    }
 };
 
 export const get3MeterUnit = (key, value) => {
@@ -417,6 +425,35 @@ export const update3MeterChart = (nextProps, currentState) => {
         }
 
         return slice.concat(data);
+    }
+};
+
+export const updateTotalChart = (nextProps, currentState) => {
+    const { value } = nextProps.item;
+    const { chartData } = currentState;
+
+    if (chartData.length === 0) {
+        const data = [];
+        for (let index = 0; index < NUMBER_OF_BARS; index++) {
+            if (index === 0) {
+                data[index] = {
+                    x: moment(),
+                    y: undefined
+                };
+            } else {
+                data[index] = {
+                    x: moment(data[index - 1].x).add(1, 's'),
+                    y: undefined
+                };
+            }
+        }
+
+        return data;
+    } else {
+        return chartData.slice(1).concat({
+            x: moment(chartData[chartData.length - 1].x).add(1, 's'),
+            y: value
+        });
     }
 };
 

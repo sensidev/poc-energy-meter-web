@@ -2,6 +2,7 @@ import moment from 'moment';
 
 export const theme = {
     white: '#fff',
+    pink: 'hotpink',
     linkWater: '#DCE4F7',
     threshold: '#9AA1B3',
     critical: '#FF723F',

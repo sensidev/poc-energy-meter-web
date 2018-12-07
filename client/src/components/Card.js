@@ -5,14 +5,7 @@ import styled from 'styled-components';
 
 import { BarChart } from './BarChart';
 import { Icons } from '../theme';
-import {
-    DIGITS,
-    getMeasurementUnit,
-    get3MeterUnit,
-    STATUS,
-    updateChartData,
-    update3MeterChart
-} from '../helpers';
+import { DIGITS, STATUS } from '../helpers';
 import { Timestamp } from './Timestamp';
 
 export class Card extends React.Component {
@@ -98,7 +91,7 @@ export class Card extends React.Component {
     }
 
     static getDerivedStateFromProps(nextProps, currentState) {
-        const { item, meter } = nextProps;
+        const { item, updateChartHandler } = nextProps;
         const { value } = item;
         const { count, sum } = currentState;
 
@@ -109,9 +102,7 @@ export class Card extends React.Component {
             max: Card.getMax(nextProps, currentState),
             avg: Card.getAvg(nextProps, currentState),
             energy: Card.getEnergy(nextProps, currentState),
-            chartData: !meter
-                ? updateChartData(nextProps, currentState)
-                : update3MeterChart(nextProps, currentState)
+            chartData: updateChartHandler(nextProps, currentState)
         };
     }
 
@@ -120,20 +111,24 @@ export class Card extends React.Component {
     }
 
     render() {
-        const { key, title, value, status } = this.props.item;
+        const { item, getUnitHandler } = this.props;
+        const { key, title, value, status } = item;
         const { min, avg, max, energy } = this.state;
-        const transform = this.props.meter ? get3MeterUnit : getMeasurementUnit;
 
         const fixedEnergy = +energy.toFixed(DIGITS);
-        const transformedEnergy = transform('en', fixedEnergy);
-        const transformedValue = transform(key, value);
+        const transformedEnergy = getUnitHandler('en', fixedEnergy);
+        const transformedValue = getUnitHandler(key, value);
 
-        const minValue = transform(key, min.value);
-        const avgValue = transform(key, avg.value);
-        const maxValue = transform(key, max.value);
+        const minValue = getUnitHandler(key, min.value);
+        const avgValue = getUnitHandler(key, avg.value);
+        const maxValue = getUnitHandler(key, max.value);
 
         return (
-            <Container width={this.props.width} height={this.props.height}>
+            <Container
+                width={this.props.width}
+                height={this.props.height}
+                middle={this.props.middle}
+            >
                 <Header>
                     <Info>
                         <Title>{title}</Title>
@@ -154,6 +149,7 @@ export class Card extends React.Component {
                     <BarChart
                         barThickness={2}
                         chartData={this.state.chartData}
+                        numberOfSamples={this.props.numberOfSamples}
                         color={status}
                     />
                 </ChartContainer>
@@ -163,7 +159,9 @@ export class Card extends React.Component {
                             <Threshold>LOWEST</Threshold>
                             <Arrow src={Icons.down} />
                             <StyledDate>
-                                {this.state.min.timestamp.fromNow().toLocaleUpperCase()}
+                                {this.state.min.timestamp
+                                    .fromNow()
+                                    .toLocaleUpperCase()}
                             </StyledDate>
                         </Details>
                         <Stat>{minValue}</Stat>
@@ -179,7 +177,9 @@ export class Card extends React.Component {
                             <Threshold color={status}>HIGHEST</Threshold>
                             <Arrow src={Icons.top} />
                             <StyledDate color={status}>
-                                {this.state.max.timestamp.fromNow().toLocaleUpperCase()}
+                                {this.state.max.timestamp
+                                    .fromNow()
+                                    .toLocaleUpperCase()}
                             </StyledDate>
                         </Details>
                         <Stat color={status}>{maxValue}</Stat>
@@ -192,11 +192,14 @@ export class Card extends React.Component {
 
 Card.propTypes = {
     item: PropTypes.object.isRequired,
-    meter: PropTypes.bool,
     timestamp: PropTypes.instanceOf(Date),
     width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    chartScaleX: PropTypes.number
+    chartScaleX: PropTypes.number,
+    getUnitHandler: PropTypes.func.isRequired,
+    updateChartHandler: PropTypes.func.isRequired,
+    numberOfSamples: PropTypes.number,
+    middle: PropTypes.bool
 };
 
 const Container = styled.div`
@@ -205,7 +208,8 @@ const Container = styled.div`
     height: ${props => (props.height ? props.height : '100%')};
     width: ${props => (props.width ? props.width : '100%')};
     background-color: ${props => props.theme.white};
-    margin: 10px;
+    margin: 10px 0;
+    margin: ${props => props.middle && '10px'};
     border-radius: 10px;
     padding: 1rem 2rem;
 `;
