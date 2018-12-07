@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-export const Input = ({ value, name, placeholder, onChange }) => (
+export const Input = ({ value, name, placeholder, onChange, type }) => (
     <StyledInput
         placeholder={placeholder}
-        type="text"
+        type={type}
         name={name}
         value={value}
         onChange={onChange}
@@ -13,9 +13,13 @@ export const Input = ({ value, name, placeholder, onChange }) => (
 );
 
 Input.propTypes = {
-    value: PropTypes.string.isRequired,
+    value: PropTypes.oneOfType([
+        PropTypes.string.isRequired,
+        PropTypes.number.isRequired
+    ]),
+    type: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    placeholder: PropTypes.string.isRequired,
+    placeholder: PropTypes.string,
     onChange: PropTypes.func.isRequired
 };
 

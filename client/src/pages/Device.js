@@ -8,7 +8,8 @@ export class Device extends React.Component {
     state = {
         values: {
             device: '',
-            tag: ''
+            tag: '',
+            samplesToSendPerUnit: 60
         }
     };
 
@@ -28,17 +29,28 @@ export class Device extends React.Component {
                     <Logo src={Icons.logo} />
                     <Site>sensix.io</Site>
                     <Input
+                        type="text"
                         value={this.state.values.device}
                         name="device"
                         placeholder="Device name"
                         onChange={this.onChange}
                     />
                     <Input
+                        type="text"
                         value={this.state.values.tag}
                         name="tag"
                         placeholder="Sensing unit tag"
                         onChange={this.onChange}
                     />
+                    <SamplesToSendContainer>
+                        <SampleLabel>Samples to send per unit</SampleLabel>
+                        <SampleInput
+                            type="number"
+                            value={this.state.values.samplesToSendPerUnit}
+                            name="samplesToSendPerUnit"
+                            onChange={this.onChange}
+                        />
+                    </SamplesToSendContainer>
                     <Button>
                         <Label>Submit</Label>
                     </Button>
@@ -60,6 +72,33 @@ const Container = styled.div`
     background-color: ${props => props.theme.linkWater};
 `;
 
+const SamplesToSendContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    width: 100%;
+`;
+
+const SampleLabel = styled.h3`
+    width: 6%;
+    color: ${props => props.theme.white};
+    margin-right: 3rem;
+`;
+
+const SampleInput = styled.input`
+    display: inline-block;
+    text-align: right;
+    background-color: ${props => props.theme.white};
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 2rem;
+    padding: 2rem;
+    height: 6rem;
+    width: 8rem;
+    margin-bottom: 1rem;
+`;
+
 const Logo = styled.img`
     height: 10rem;
     width: 10rem;
@@ -76,6 +115,7 @@ const Site = styled.h1`
 const Label = styled.h3`
     margin: 0;
     color: ${props => props.theme.white};
+    text-align: 'center';
 `;
 
 const Button = styled.div`

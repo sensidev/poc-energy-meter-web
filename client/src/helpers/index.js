@@ -210,8 +210,8 @@ export const generate3PhaseMeter = () => {
                 Irms: +generateRandom(4, 5).toFixed(DIGITS),
                 Vrms: +generateRandom(200, 300).toFixed(DIGITS)
             },
-            temp: +generateRandom(-5, 25).toFixed(DIGITS),
-            Vref: +generateRandom(0, 2).toFixed(DIGITS)
+            temp: +generateRandom(35, 95).toFixed(DIGITS),
+            Vref: +generateRandom(0, 5).toFixed(DIGITS)
         };
     }
 
@@ -223,6 +223,9 @@ export const generate3PhaseMeter = () => {
                 delta: 60,
                 data: {
                     average: {
+                        totalP: +generateRandom(56000, 60000).toFixed(DIGITS),
+                        powerFactor: +generateRandom(0, 100).toFixed(DIGITS),
+                        totalE: +generateRandom(12000, 13000).toFixed(DIGITS),
                         R: {
                             Pavg: +generateRandom(15000, 1600).toFixed(DIGITS),
                             Irms: +generateRandom(4, 5).toFixed(DIGITS),
@@ -238,8 +241,8 @@ export const generate3PhaseMeter = () => {
                             Irms: +generateRandom(4, 5).toFixed(DIGITS),
                             Vrms: +generateRandom(200, 300).toFixed(DIGITS)
                         },
-                        temp: 21.65,
-                        Vref: 1.144
+                        temp: +generateRandom(35, 95).toFixed(DIGITS),
+                        Vref: +generateRandom(0, 5).toFixed(DIGITS)
                     },
                     samples
                 },
@@ -318,48 +321,61 @@ export const map3PhaseMeter = data => {
                 value: data.state.reported.data.average['T'].Vrms,
                 samples: data.state.reported.data.samples,
                 status: STATUS.Default
+            },
+            {
+                key: 'TEMP',
+                title: 'Temperature - average on all 3 phases',
+                value: data.state.reported.data.average.temp,
+                samples: data.state.reported.data.samples,
+                status: STATUS.Default
+            },
+            {
+                key: 'VREF',
+                title: 'V Ref - on all 3 phases',
+                value: data.state.reported.data.average.Vref,
+                samples: data.state.reported.data.samples,
+                status: STATUS.Default
             }
+            // {
+            //     key: 'TOTALP',
+            //     title: 'Total Power - on all 3 phases',
+            //     value: data.state.reported.data.average.totalP,
+            //     samples: data.state.reported.data.samples,
+            //     status: STATUS.Default
+            // },
+            // {
+            //     key: 'POWERFACTOR',
+            //     title: 'Power Factor - on all 3 phases',
+            //     value: data.state.reported.data.average.powerFactor,
+            //     samples: data.state.reported.data.samples,
+            //     status: STATUS.Default
+            // },
+            // {
+            //     key: 'TOTALE',
+            //     title: 'Total Energy - on all 3 phases',
+            //     value: data.state.reported.data.average.totalE,
+            //     samples: data.state.reported.data.samples,
+            //     status: STATUS.Default
+            // }
         ]
     };
 };
 
 export const get3MeterUnit = (key, value) => {
-    if (key === 'RP' || key === 'SP' || key === 'TP') {
+    if (key === 'RP' || key === 'SP' || key === 'TP' || key === 'TOTALP') {
         return `${value} W`;
     } else if (key === 'RI' || key === 'SI' || key === 'TI') {
         return `${value} A`;
+    } else if (key === 'TEMP') {
+        return `${value} °C`;
+    } else if (key === 'POWERFACTOR') {
+        return `${value} %`;
+    } else if (key === 'TOTALE') {
+        return `${value} kWh`;
     } else {
         return `${value} V`;
     }
 };
-
-// export const update3MeterChart = (item, chartData, index) => {
-//     const { samples, key } = item;
-
-//     if (chartData.length === 0) {
-//         const data = [];
-//         for (let index = 0; index < NUMBER_OF_METER_BARS; index++) {
-//             if (index === 0) {
-//                 data[index] = {
-//                     x: moment(),
-//                     y: 0
-//                 };
-//             } else {
-//                 data[index] = {
-//                     x: moment(data[index - 1].x).add(1, 's'),
-//                     y: 0
-//                 };
-//             }
-//         }
-
-//         return data;
-//     } else {
-//         return chartData.slice(1).concat({
-//             x: moment(chartData[chartData.length - 1].x).add(1, 's'),
-//             y: selectCorrectSample(samples[index], key)
-//         });
-//     }
-// };
 
 export const update3MeterChart = (nextProps, currentState) => {
     const { samples, key } = nextProps.item;
@@ -434,6 +450,21 @@ const selectCorrectSample = (sample, key) => {
             break;
         case 'TV':
             value = sample['T'].Vrms;
+            break;
+        case 'TEMP':
+            value = sample.temp;
+            break;
+        case 'VREF':
+            value = sample.Vref;
+            break;
+        case 'TOTALP':
+            value = sample.totalP;
+            break;
+        case 'POWERFACTOR':
+            value = sample.powerFactor;
+            break;
+        case 'TOTALE':
+            value = sample.totalE;
             break;
         default:
             break;

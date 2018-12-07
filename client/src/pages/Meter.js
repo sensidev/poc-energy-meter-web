@@ -10,7 +10,34 @@ export class Meter extends React.Component {
         super(props);
 
         this.state = {
-            data: {
+            showTotalValues: true,
+            TotalPhaseData: {
+                timestamp: new Date(Date.now()),
+                values: [
+                    {
+                        key: 'TOTALP',
+                        title: 'Total Power - on all 3 phases',
+                        value: '-',
+                        samples: [],
+                        status: STATUS.Default
+                    },
+                    {
+                        key: 'POWERFACTOR',
+                        title: 'Power Factor - on all 3 phases',
+                        value: '-',
+                        samples: [],
+                        status: STATUS.Default
+                    },
+                    {
+                        key: 'TOTALE',
+                        title: 'Total Energy - on all 3 phases',
+                        value: '-',
+                        samples: [],
+                        status: STATUS.Default
+                    }
+                ]
+            },
+            ThreePhaseData: {
                 timestamp: new Date(Date.now()),
                 values: [
                     {
@@ -75,6 +102,20 @@ export class Meter extends React.Component {
                         value: '-',
                         samples: [],
                         status: STATUS.Critical
+                    },
+                    {
+                        key: 'TEMP',
+                        title: 'Temperature - average on all 3 phases',
+                        value: '-',
+                        samples: [],
+                        status: STATUS.Critical
+                    },
+                    {
+                        key: 'VREF',
+                        title: 'V Ref - on all 3 phases',
+                        value: '-',
+                        samples: [],
+                        status: STATUS.Critical
                     }
                 ]
             }
@@ -87,20 +128,59 @@ export class Meter extends React.Component {
     }
 
     simulateSampling = () => {
-        const meter = generate3PhaseMeter();
-        const data = map3PhaseMeter(meter);
-        this.setState({ data });
+        const ThreePhaseMeter = generate3PhaseMeter();
+        const ThreePhaseData = map3PhaseMeter(ThreePhaseMeter);
+        this.setState({ ThreePhaseData });
     };
+
+    // handleCheckboxChange = () => {
+    //     const { checked } = this.state;
+
+    //     if (checked) {
+    //         this.setState({ checked: false });
+    //     } else {
+    //         this.setState({ checked: true });
+    //     }
+    // };
 
     render() {
         return (
             <ThemeProvider theme={theme}>
                 <Container>
-                    <List>
-                        {this.state.data.values.map(item => (
+                    {/* <CheckboxContainer>
+                        <CheckboxLabel htmlFor="show-total-values-checkbox">
+                            Show total values
+                        </CheckboxLabel>
+                        <Checkbox
+                            type="checkbox"
+                            name="show-total-values-checkbox"
+                            id="show-total-values-checkbox"
+                            checked={this.state.checked}
+                            onChange={this.handleCheckboxChange}
+                        />
+                    </CheckboxContainer> */}
+                    {this.state.showTotalValues && (
+                        <TotalPhaseList>
+                            {this.state.TotalPhaseData.values.map(item => (
+                                <Card
+                                    item={item}
+                                    timestamp={
+                                        this.state.TotalPhaseData.timestamp
+                                    }
+                                    key={item.key}
+                                    width="29.3%"
+                                    height="30vh"
+                                    chartScaleX={1.06}
+                                    meter
+                                />
+                            ))}
+                        </TotalPhaseList>
+                    )}
+                    <ThreePhaseList>
+                        {this.state.ThreePhaseData.values.map(item => (
                             <Card
                                 item={item}
-                                timestamp={this.state.data.timestamp}
+                                timestamp={this.state.ThreePhaseData.timestamp}
                                 key={item.key}
                                 width="90%"
                                 height="30vh"
@@ -108,7 +188,7 @@ export class Meter extends React.Component {
                                 meter
                             />
                         ))}
-                    </List>
+                    </ThreePhaseList>
                 </Container>
             </ThemeProvider>
         );
@@ -123,10 +203,37 @@ const Container = styled.div`
     background-color: ${props => props.theme.linkWater};
 `;
 
-const List = styled.div`
+const CheckboxContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 4rem 0 2rem 10rem;
+`;
+
+const CheckboxLabel = styled.label`
+    color: ${props => props.theme.black};
+    margin-right: 1rem;
+    font-family: 'IBM Plex Mono';
+    font-weight: bolder;
+    font-size: 2.1rem;
+`;
+
+const Checkbox = styled.input`
+    zoom: 2;
+`;
+
+const TotalPhaseList = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding-top: 2rem;
+    /* width: 80%; */
+`;
+
+const ThreePhaseList = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 4rem 0;
 `;
