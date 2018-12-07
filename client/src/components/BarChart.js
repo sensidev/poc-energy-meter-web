@@ -1,12 +1,11 @@
 import React from 'react';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import { Bar } from 'react-chartjs-2';
 import 'chartjs-plugin-datalabels';
 
 import { theme } from '../theme';
 
-export const BarChart = ({ chartData, color }) => {
+export const BarChart = ({ chartData, color, barThickness }) => {
     const options = {
         legend: {
             display: false
@@ -18,7 +17,7 @@ export const BarChart = ({ chartData, color }) => {
                     distribution: 'series',
                     display: false,
                     offset: true,
-                    barThickness: 3
+                    barThickness: barThickness ? barThickness : 3
                 }
             ],
             yAxes: [
@@ -61,5 +60,7 @@ export const BarChart = ({ chartData, color }) => {
 
 BarChart.propTypers = {
     chartData: PropTypes.array.isRequired,
-    color: PropTypes.string
+    timestamp: PropTypes.instanceOf(Date),
+    color: PropTypes.string,
+    barThickness: PropTypes.number
 };

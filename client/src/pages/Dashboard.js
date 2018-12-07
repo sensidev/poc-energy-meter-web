@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 
 import { Card } from '../components';
-import { Icons, theme } from '../theme';
+import { theme } from '../theme';
 import {
     generateBear,
     generateEnergy,
@@ -185,7 +185,7 @@ export class Dashboard extends React.Component {
         });
 
         // TODO: REMOVE ME
-        // setInterval(() => this.simulateSampling(), 1000);
+        setInterval(() => this.simulateSampling(), 1000);
     }
 
     simulateSampling = () => {
@@ -210,6 +210,9 @@ export class Dashboard extends React.Component {
                                 item={item}
                                 timestamp={this.state.bearData.timestamp}
                                 key={item.key}
+                                width="30%"
+                                height="28vh"
+                                chartScaleX={1.2}
                             />
                         ))}
                         {this.state.enData.values.map(item => (
@@ -217,13 +220,12 @@ export class Dashboard extends React.Component {
                                 item={item}
                                 timestamp={this.state.enData.timestamp}
                                 key={item.key}
+                                width="30%"
+                                height="28vh"
+                                chartScaleX={1.2}
                             />
                         ))}
                     </List>
-                    <Contact>
-                        <Logo src={Icons.logo} />
-                        <Site>sensix.io</Site>
-                    </Contact>
                 </Container>
             </ThemeProvider>
         );
@@ -237,6 +239,9 @@ const Container = styled.div`
     width: 100vw;
     height: 100vh;
     background-color: ${props => props.theme.linkWater};
+    display: flex;
+    justify-content: center;
+    padding: 4rem 0;
 `;
 
 const List = styled.div`
@@ -244,26 +249,4 @@ const List = styled.div`
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    padding-top: 2rem;
-`;
-
-const Contact = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 1rem 0;
-`;
-
-const Logo = styled.img`
-    height: 7.2rem;
-    width: 7.2rem;
-    border-radius: 50%;
-    margin-bottom: 1rem;
-`;
-
-const Site = styled.h3`
-    margin: 0;
-    color: ${props => props.theme.default};
 `;

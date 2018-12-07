@@ -8,8 +8,10 @@ import { Icons } from '../theme';
 import {
     DIGITS,
     getMeasurementUnit,
+    get3MeterUnit,
     STATUS,
-    updateChartData
+    updateChartData,
+    update3MeterChart
 } from '../helpers';
 import { Timestamp } from './Timestamp';
 
@@ -96,7 +98,8 @@ export class Card extends React.Component {
     }
 
     static getDerivedStateFromProps(nextProps, currentState) {
-        const { value } = nextProps.item;
+        const { item, meter } = nextProps;
+        const { value } = item;
         const { count, sum } = currentState;
 
         return {
@@ -106,7 +109,9 @@ export class Card extends React.Component {
             max: Card.getMax(nextProps, currentState),
             avg: Card.getAvg(nextProps, currentState),
             energy: Card.getEnergy(nextProps, currentState),
-            chartData: updateChartData(nextProps, currentState)
+            chartData: !meter
+                ? updateChartData(nextProps, currentState)
+                : update3MeterChart(nextProps, currentState)
         };
     }
 
@@ -117,17 +122,18 @@ export class Card extends React.Component {
     render() {
         const { key, title, value, status } = this.props.item;
         const { min, avg, max, energy } = this.state;
+        const transform = this.props.meter ? get3MeterUnit : getMeasurementUnit;
 
         const fixedEnergy = +energy.toFixed(DIGITS);
-        const transformedEnergy = getMeasurementUnit('en', fixedEnergy);
-        const transformedValue = getMeasurementUnit(key, value);
+        const transformedEnergy = transform('en', fixedEnergy);
+        const transformedValue = transform(key, value);
 
-        const minValue = getMeasurementUnit(key, min.value);
-        const avgValue = getMeasurementUnit(key, avg.value);
-        const maxValue = getMeasurementUnit(key, max.value);
+        const minValue = transform(key, min.value);
+        const avgValue = transform(key, avg.value);
+        const maxValue = transform(key, max.value);
 
         return (
-            <Container>
+            <Container width={this.props.width} height={this.props.height}>
                 <Header>
                     <Info>
                         <Title>{title}</Title>
@@ -144,8 +150,9 @@ export class Card extends React.Component {
                         )}
                     </StatusContainer>
                 </Header>
-                <ChartContainer color={status}>
+                <ChartContainer scaleX={this.props.chartScaleX} color={status}>
                     <BarChart
+                        barThickness={2}
                         chartData={this.state.chartData}
                         color={status}
                     />
@@ -185,14 +192,18 @@ export class Card extends React.Component {
 
 Card.propTypes = {
     item: PropTypes.object.isRequired,
-    timestamp: PropTypes.instanceOf(Date)
+    meter: PropTypes.bool,
+    timestamp: PropTypes.instanceOf(Date),
+    width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    chartScaleX: PropTypes.number
 };
 
 const Container = styled.div`
     display: flex;
     flex-direction: column;
-    height: 25vh;
-    width: 30%;
+    height: ${props => (props.height ? props.height : '100%')};
+    width: ${props => (props.width ? props.width : '100%')};
     background-color: ${props => props.theme.white};
     margin: 10px;
     border-radius: 10px;
@@ -239,7 +250,8 @@ const Status = styled.img`
 
 const ChartContainer = styled.div`
     flex: 2;
-    transform: scaleX(1.2);
+    transform: ${props =>
+        props.scaleX ? `scaleX(${props.scaleX})` : 'scaleX(1)'};
 `;
 
 const Footer = styled.div`

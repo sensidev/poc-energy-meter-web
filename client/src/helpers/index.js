@@ -1,6 +1,7 @@
 import moment from 'moment';
 
 const NUMBER_OF_BARS = 34;
+const NUMBER_OF_METER_BARS = 300;
 export const DIGITS = 2;
 
 export const STATUS = {
@@ -188,4 +189,255 @@ export const updateChartData = (nextProps, currentState) => {
     }
 
     return [];
+};
+
+export const generate3PhaseMeter = () => {
+    const samples = new Array(60);
+    for (let index = 0; index < 60; index++) {
+        samples[index] = {
+            R: {
+                Pavg: +generateRandom(15000, 1600).toFixed(DIGITS),
+                Irms: +generateRandom(4, 5).toFixed(DIGITS),
+                Vrms: +generateRandom(200, 300).toFixed(DIGITS)
+            },
+            S: {
+                Pavg: +generateRandom(15000, 1600).toFixed(DIGITS),
+                Irms: +generateRandom(4, 5).toFixed(DIGITS),
+                Vrms: +generateRandom(200, 300).toFixed(DIGITS)
+            },
+            T: {
+                Pavg: +generateRandom(15000, 1600).toFixed(DIGITS),
+                Irms: +generateRandom(4, 5).toFixed(DIGITS),
+                Vrms: +generateRandom(200, 300).toFixed(DIGITS)
+            },
+            temp: +generateRandom(-5, 25).toFixed(DIGITS),
+            Vref: +generateRandom(0, 2).toFixed(DIGITS)
+        };
+    }
+
+    return {
+        state: {
+            reported: {
+                EUI: '31ENERGY-00000001',
+                sensingUnitTag: 123,
+                delta: 60,
+                data: {
+                    average: {
+                        R: {
+                            Pavg: +generateRandom(15000, 1600).toFixed(DIGITS),
+                            Irms: +generateRandom(4, 5).toFixed(DIGITS),
+                            Vrms: +generateRandom(200, 300).toFixed(DIGITS)
+                        },
+                        S: {
+                            Pavg: +generateRandom(15000, 1600).toFixed(DIGITS),
+                            Irms: +generateRandom(4, 5).toFixed(DIGITS),
+                            Vrms: +generateRandom(200, 300).toFixed(DIGITS)
+                        },
+                        T: {
+                            Pavg: +generateRandom(15000, 1600).toFixed(DIGITS),
+                            Irms: +generateRandom(4, 5).toFixed(DIGITS),
+                            Vrms: +generateRandom(200, 300).toFixed(DIGITS)
+                        },
+                        temp: 21.65,
+                        Vref: 1.144
+                    },
+                    samples
+                },
+                config: {
+                    samplesToSendPerUnit: 60
+                }
+            }
+        },
+        timestamp: new Date(Date.now())
+    };
+};
+
+export const map3PhaseMeter = data => {
+    return {
+        timestamp: data.timestamp,
+        values: [
+            {
+                key: 'RP',
+                title: 'Phase R - avg power',
+                value: data.state.reported.data.average['R'].Pavg,
+                samples: data.state.reported.data.samples,
+                status: STATUS.Default
+            },
+            {
+                key: 'RI',
+                title: 'Phase R - rms intensity',
+                value: data.state.reported.data.average['R'].Irms,
+                samples: data.state.reported.data.samples,
+                status: STATUS.Default
+            },
+            {
+                key: 'RV',
+                title: 'Phase R - rms voltage',
+                value: data.state.reported.data.average['R'].Vrms,
+                samples: data.state.reported.data.samples,
+                status: STATUS.Default
+            },
+            {
+                key: 'SP',
+                title: 'Phase S - avg power',
+                value: data.state.reported.data.average['S'].Pavg,
+                samples: data.state.reported.data.samples,
+                status: STATUS.Default
+            },
+            {
+                key: 'SI',
+                title: 'Phase S - rms intensity',
+                value: data.state.reported.data.average['S'].Irms,
+                samples: data.state.reported.data.samples,
+                status: STATUS.Default
+            },
+            {
+                key: 'SV',
+                title: 'Phase S - rms voltage',
+                value: data.state.reported.data.average['S'].Vrms,
+                samples: data.state.reported.data.samples,
+                status: STATUS.Default
+            },
+            {
+                key: 'TP',
+                title: 'Phase T - avg power',
+                value: data.state.reported.data.average['T'].Pavg,
+                samples: data.state.reported.data.samples,
+                status: STATUS.Default
+            },
+            {
+                key: 'TI',
+                title: 'Phase T - rms intensity',
+                value: data.state.reported.data.average['T'].Irms,
+                samples: data.state.reported.data.samples,
+                status: STATUS.Default
+            },
+            {
+                key: 'TV',
+                title: 'Phase T - rms voltage',
+                value: data.state.reported.data.average['T'].Vrms,
+                samples: data.state.reported.data.samples,
+                status: STATUS.Default
+            }
+        ]
+    };
+};
+
+export const get3MeterUnit = (key, value) => {
+    if (key === 'RP' || key === 'SP' || key === 'TP') {
+        return `${value} W`;
+    } else if (key === 'RI' || key === 'SI' || key === 'TI') {
+        return `${value} A`;
+    } else {
+        return `${value} V`;
+    }
+};
+
+// export const update3MeterChart = (item, chartData, index) => {
+//     const { samples, key } = item;
+
+//     if (chartData.length === 0) {
+//         const data = [];
+//         for (let index = 0; index < NUMBER_OF_METER_BARS; index++) {
+//             if (index === 0) {
+//                 data[index] = {
+//                     x: moment(),
+//                     y: 0
+//                 };
+//             } else {
+//                 data[index] = {
+//                     x: moment(data[index - 1].x).add(1, 's'),
+//                     y: 0
+//                 };
+//             }
+//         }
+
+//         return data;
+//     } else {
+//         return chartData.slice(1).concat({
+//             x: moment(chartData[chartData.length - 1].x).add(1, 's'),
+//             y: selectCorrectSample(samples[index], key)
+//         });
+//     }
+// };
+
+export const update3MeterChart = (nextProps, currentState) => {
+    const { samples, key } = nextProps.item;
+    const { chartData } = currentState;
+
+    if (chartData.length === 0) {
+        const data = [];
+        for (let index = 0; index < NUMBER_OF_METER_BARS; index++) {
+            if (index === 0) {
+                data[index] = {
+                    x: moment(),
+                    y: undefined
+                };
+            } else {
+                data[index] = {
+                    x: moment(data[index - 1].x).add(1, 's'),
+                    y: undefined
+                };
+            }
+        }
+
+        return data;
+    } else {
+        const data = [];
+        const slice = chartData.slice(60);
+
+        for (let index = 0; index < samples.length; index++) {
+            if (index === 0) {
+                data[index] = {
+                    x: moment(slice[slice.length - 1].x),
+                    y: selectCorrectSample(samples[index], key)
+                };
+            } else {
+                data[index] = {
+                    x: moment(data[index - 1].x).add(1, 's'),
+                    y: selectCorrectSample(samples[index], key)
+                };
+            }
+        }
+
+        return slice.concat(data);
+    }
+};
+
+const selectCorrectSample = (sample, key) => {
+    let value = null;
+
+    switch (key) {
+        case 'RP':
+            value = sample['R'].Pavg;
+            break;
+        case 'RI':
+            value = sample['R'].Irms;
+            break;
+        case 'RV':
+            value = sample['R'].Vrms;
+            break;
+        case 'SP':
+            value = sample['S'].Pavg;
+            break;
+        case 'SI':
+            value = sample['S'].Irms;
+            break;
+        case 'SV':
+            value = sample['S'].Vrms;
+            break;
+        case 'TP':
+            value = sample['T'].Pavg;
+            break;
+        case 'TI':
+            value = sample['T'].Irms;
+            break;
+        case 'TV':
+            value = sample['T'].Vrms;
+            break;
+        default:
+            break;
+    }
+
+    return value;
 };
