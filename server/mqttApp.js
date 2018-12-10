@@ -5,7 +5,7 @@ const socketIo = require('socket.io');
 const deviceModule = require('aws-iot-device-sdk').device;
 const awsCmdLineProcess = require('aws-iot-device-sdk/examples/lib/cmdline');
 
-const subscribeTopic = "$aws/things/+/shadow/update/accepted";
+const subscribeTopic = "up/device/processed/payload/+/customer/+";
 
 const serverPort = process.env.PORT || 8000;
 const index = require('./routes/index');

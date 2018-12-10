@@ -187,7 +187,7 @@ export class Dashboard extends React.Component {
         });
 
         // TODO: REMOVE ME
-        setInterval(() => this.simulateSampling(), 1000);
+        // setInterval(() => this.simulateSampling(), 1000);
     }
 
     simulateSampling = () => {

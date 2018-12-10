@@ -263,22 +263,22 @@ export const map3PhaseMeter = (data, total) => {
                 {
                     key: 'TOTALP',
                     title: 'Total Power - on all 3 phases',
-                    value: data.state.reported.data.average.totalP,
-                    samples: data.state.reported.data.samples,
+                    value: data.average.totalP,
+                    samples: data.samples,
                     status: STATUS.Default
                 },
                 {
                     key: 'POWERFACTOR',
                     title: 'Power Factor - on all 3 phases',
-                    value: data.state.reported.data.average.powerFactor,
-                    samples: data.state.reported.data.samples,
+                    value: data.average.powerFactor,
+                    samples: data.samples,
                     status: STATUS.Default
                 },
                 {
                     key: 'TOTALE',
                     title: 'Total Energy - on all 3 phases',
-                    value: data.state.reported.data.average.totalE,
-                    samples: data.state.reported.data.samples,
+                    value: data.average.totalE,
+                    samples: data.samples,
                     status: STATUS.Default
                 }
             ]
@@ -290,78 +290,78 @@ export const map3PhaseMeter = (data, total) => {
                 {
                     key: 'RP',
                     title: 'Phase R - avg power',
-                    value: data.state.reported.data.average['R'].Pavg,
-                    samples: data.state.reported.data.samples,
+                    value: data.average['R'].Pavg,
+                    samples: data.samples,
                     status: STATUS.Default
                 },
                 {
                     key: 'RI',
                     title: 'Phase R - rms intensity',
-                    value: data.state.reported.data.average['R'].Irms,
-                    samples: data.state.reported.data.samples,
+                    value: data.average['R'].Irms,
+                    samples: data.samples,
                     status: STATUS.Default
                 },
                 {
                     key: 'RV',
                     title: 'Phase R - rms voltage',
-                    value: data.state.reported.data.average['R'].Vrms,
-                    samples: data.state.reported.data.samples,
+                    value: data.average['R'].Vrms,
+                    samples: data.samples,
                     status: STATUS.Default
                 },
                 {
                     key: 'SP',
                     title: 'Phase S - avg power',
-                    value: data.state.reported.data.average['S'].Pavg,
-                    samples: data.state.reported.data.samples,
+                    value: data.average['S'].Pavg,
+                    samples: data.samples,
                     status: STATUS.Default
                 },
                 {
                     key: 'SI',
                     title: 'Phase S - rms intensity',
-                    value: data.state.reported.data.average['S'].Irms,
-                    samples: data.state.reported.data.samples,
+                    value: data.average['S'].Irms,
+                    samples: data.samples,
                     status: STATUS.Default
                 },
                 {
                     key: 'SV',
                     title: 'Phase S - rms voltage',
-                    value: data.state.reported.data.average['S'].Vrms,
-                    samples: data.state.reported.data.samples,
+                    value: data.average['S'].Vrms,
+                    samples: data.samples,
                     status: STATUS.Default
                 },
                 {
                     key: 'TP',
                     title: 'Phase T - avg power',
-                    value: data.state.reported.data.average['T'].Pavg,
-                    samples: data.state.reported.data.samples,
+                    value: data.average['T'].Pavg,
+                    samples: data.samples,
                     status: STATUS.Default
                 },
                 {
                     key: 'TI',
                     title: 'Phase T - rms intensity',
-                    value: data.state.reported.data.average['T'].Irms,
-                    samples: data.state.reported.data.samples,
+                    value: data.average['T'].Irms,
+                    samples: data.samples,
                     status: STATUS.Default
                 },
                 {
                     key: 'TV',
                     title: 'Phase T - rms voltage',
-                    value: data.state.reported.data.average['T'].Vrms,
-                    samples: data.state.reported.data.samples,
+                    value: data.average['T'].Vrms,
+                    samples: data.samples,
                     status: STATUS.Default
                 },
                 {
                     key: 'TEMP',
                     title: 'Temperature - average on all 3 phases',
-                    value: data.state.reported.data.average.temp,
-                    samples: data.state.reported.data.samples,
+                    value: data.average.temp,
+                    samples: data.samples,
                     status: STATUS.Default
                 },
                 {
                     key: 'VREF',
                     title: 'V Ref - on all 3 phases',
-                    value: data.state.reported.data.average.Vref,
-                    samples: data.state.reported.data.samples,
+                    value: data.average.Vref,
+                    samples: data.samples,
                     status: STATUS.Default
                 }
             ]
