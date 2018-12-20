@@ -134,8 +134,9 @@ export class Meter extends React.Component {
 
             console.log('Received state: ', payload);
             let euiHash = window.location.hash;
-            let EUI = parseInt(euiHash.replace('#', ''));
-            if (payload.state.reported.EUI === EUI) {
+            let expectedEUI = parseInt(euiHash.replace('#', ''));
+            let actualEUI = parseInt(payload.state.reported.EUI.substring(9));
+            if (actualEUI === expectedEUI) {
                 const meter = map3PhaseMeter(payload.state.reported.data, false);
                 this.setState({meter});
             }
@@ -160,8 +161,8 @@ export class Meter extends React.Component {
             <ThemeProvider theme={theme}>
                 <Container>
                     {/*<CardSection*/}
-                        {/*data={this.state.total}*/}
-                        {/*displayTotal={DISPLAY_TOTAL_VALUES}*/}
+                    {/*data={this.state.total}*/}
+                    {/*displayTotal={DISPLAY_TOTAL_VALUES}*/}
                     {/*/>*/}
                     <CardSection data={this.state.meter} numberOfSamples={60}/>
                 </Container>

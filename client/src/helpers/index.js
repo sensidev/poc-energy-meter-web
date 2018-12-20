@@ -161,8 +161,8 @@ export const getMeasurementUnit = (key, value) => {
 };
 
 export const updateChartData = (nextProps, currentState) => {
-    const { value } = nextProps.item;
-    const { count, chartData } = currentState;
+    const {value} = nextProps.item;
+    const {count, chartData} = currentState;
 
     if (count > 0) {
         if (chartData.length === 0) {
@@ -290,77 +290,77 @@ export const map3PhaseMeter = (data, total) => {
                 {
                     key: 'RP',
                     title: 'Phase R - avg power',
-                    value: data.average['R'].Pavg,
+                    value: data.average['R_Pavg'],
                     samples: data.samples,
                     status: STATUS.Default
                 },
                 {
                     key: 'RI',
                     title: 'Phase R - rms intensity',
-                    value: data.average['R'].Irms,
+                    value: data.average['R_Irms'],
                     samples: data.samples,
                     status: STATUS.Default
                 },
                 {
                     key: 'RV',
                     title: 'Phase R - rms voltage',
-                    value: data.average['R'].Vrms,
+                    value: data.average['R_Vrms'],
                     samples: data.samples,
                     status: STATUS.Default
                 },
                 {
                     key: 'SP',
                     title: 'Phase S - avg power',
-                    value: data.average['S'].Pavg,
+                    value: data.average['S_Pavg'],
                     samples: data.samples,
                     status: STATUS.Default
                 },
                 {
                     key: 'SI',
                     title: 'Phase S - rms intensity',
-                    value: data.average['S'].Irms,
+                    value: data.average['S_Irms'],
                     samples: data.samples,
                     status: STATUS.Default
                 },
                 {
                     key: 'SV',
                     title: 'Phase S - rms voltage',
-                    value: data.average['S'].Vrms,
+                    value: data.average['S_Vrms'],
                     samples: data.samples,
                     status: STATUS.Default
                 },
                 {
                     key: 'TP',
                     title: 'Phase T - avg power',
-                    value: data.average['T'].Pavg,
+                    value: data.average['T_Pavg'],
                     samples: data.samples,
                     status: STATUS.Default
                 },
                 {
                     key: 'TI',
                     title: 'Phase T - rms intensity',
-                    value: data.average['T'].Irms,
+                    value: data.average['T_Irms'],
                     samples: data.samples,
                     status: STATUS.Default
                 },
                 {
                     key: 'TV',
                     title: 'Phase T - rms voltage',
-                    value: data.average['T'].Vrms,
+                    value: data.average['T_Vrms'],
                     samples: data.samples,
                     status: STATUS.Default
                 },
                 {
                     key: 'TEMP',
                     title: 'Temperature - average on all 3 phases',
-                    value: data.average.temp,
+                    value: data.average['temp'],
                     samples: data.samples,
                     status: STATUS.Default
                 },
                 {
                     key: 'VREF',
                     title: 'V Ref - on all 3 phases',
-                    value: data.average.Vref,
+                    value: data.average['Vref'],
                     samples: data.samples,
                     status: STATUS.Default
                 }
@@ -386,8 +386,8 @@ export const get3MeterUnit = (key, value) => {
 };
 
 export const update3MeterChart = (nextProps, currentState) => {
-    const { samples, key } = nextProps.item;
-    const { chartData } = currentState;
+    const {samples, key} = nextProps.item;
+    const {chartData} = currentState;
 
     if (chartData.length === 0) {
         const data = [];
@@ -429,8 +429,8 @@ export const update3MeterChart = (nextProps, currentState) => {
 };
 
 export const updateTotalChart = (nextProps, currentState) => {
-    const { value } = nextProps.item;
-    const { chartData } = currentState;
+    const {value} = nextProps.item;
+    const {chartData} = currentState;
 
     if (chartData.length === 0) {
         const data = [];
@@ -462,37 +462,37 @@ const selectCorrectSample = (sample, key) => {
 
     switch (key) {
         case 'RP':
-            value = sample['R'].Pavg;
+            value = sample['R_Pavg'];
             break;
         case 'RI':
-            value = sample['R'].Irms;
+            value = sample['R_Irms'];
             break;
         case 'RV':
-            value = sample['R'].Vrms;
+            value = sample['R_Vrms'];
             break;
         case 'SP':
-            value = sample['S'].Pavg;
+            value = sample['S_Pavg'];
             break;
         case 'SI':
-            value = sample['S'].Irms;
+            value = sample['S_Irms'];
             break;
         case 'SV':
-            value = sample['S'].Vrms;
+            value = sample['S_Vrms'];
             break;
         case 'TP':
-            value = sample['T'].Pavg;
+            value = sample['T_Pavg'];
             break;
         case 'TI':
-            value = sample['T'].Irms;
+            value = sample['T_Irms'];
             break;
         case 'TV':
-            value = sample['T'].Vrms;
+            value = sample['T_Vrms'];
             break;
         case 'TEMP':
-            value = sample.temp;
+            value = sample['temp'];
             break;
         case 'VREF':
-            value = sample.Vref;
+            value = sample['Vref'];
             break;
         case 'TOTALP':
             value = sample.totalP;
