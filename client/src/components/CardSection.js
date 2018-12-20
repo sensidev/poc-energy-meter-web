@@ -3,43 +3,51 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import { Card } from './Card';
-import { get3MeterUnit, update3MeterChart, updateTotalChart } from '../helpers';
 
 export class CardSection extends React.Component {
     render() {
-        if (this.props.displayTotal) {
+        const {
+            row,
+            data,
+            getUnitHandler,
+            updateChartHandler,
+            numberOfSamples
+        } = this.props;
+
+        if (row) {
             return (
-                <TotalPhaseList>
-                    {this.props.data.values.map((item, index) => (
+                <Row>
+                    {data.values.map(item => (
                         <Card
                             item={item}
-                            timestamp={this.props.data.timestamp}
+                            timestamp={data.timestamp}
                             key={item.key}
-                            height="30vh"
-                            chartScaleX={1.22}
-                            getUnitHandler={get3MeterUnit}
-                            updateChartHandler={updateTotalChart}
-                            middle={(index + 2) % 3 === 0}
+                            width="32%"
+                            height="28vh"
+                            chartScaleX={1.1}
+                            getUnitHandler={getUnitHandler}
+                            updateChartHandler={updateChartHandler}
                         />
                     ))}
-                </TotalPhaseList>
+                </Row>
             );
         } else {
             return (
-                <ThreePhaseList>
-                    {this.props.data.values.map(item => (
+                <Column>
+                    {data.values.map(item => (
                         <Card
                             item={item}
-                            timestamp={this.props.data.timestamp}
+                            timestamp={data.timestamp}
                             key={item.key}
+                            width="98.3%"
                             height="30vh"
-                            chartScaleX={1.09}
-                            getUnitHandler={get3MeterUnit}
-                            updateChartHandler={update3MeterChart}
-                            numberOfSamples={this.props.numberOfSamples}
+                            chartScaleX={1.1}
+                            getUnitHandler={getUnitHandler}
+                            updateChartHandler={updateChartHandler}
+                            numberOfSamples={numberOfSamples}
                         />
                     ))}
-                </ThreePhaseList>
+                </Column>
             );
         }
     }
@@ -47,17 +55,21 @@ export class CardSection extends React.Component {
 
 CardSection.propTypes = {
     data: PropTypes.object.isRequired,
-    numberOfSamples: PropTypes.number
+    getUnitHandler: PropTypes.func.isRequired,
+    updateChartHandler: PropTypes.func.isRequired,
+    numberOfSamples: PropTypes.number,
+    row: PropTypes.bool
 };
 
-const TotalPhaseList = styled.div`
+const Row = styled.div`
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 `;
 
-const ThreePhaseList = styled.div`
+const Column = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;

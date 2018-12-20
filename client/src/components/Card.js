@@ -80,9 +80,12 @@ export class Card extends React.Component {
         const { sum, count } = currentState;
 
         if (!isNaN(value)) {
-            return {
-                value: +(sum / count).toFixed(2)
-            };
+            const avg = +(sum / count).toFixed(2);
+
+            if (!isNaN(avg))
+                return {
+                    value: avg
+                };
         }
 
         return {
@@ -127,7 +130,8 @@ export class Card extends React.Component {
             <Container
                 width={this.props.width}
                 height={this.props.height}
-                middle={this.props.middle}
+                spacing={this.props.spacing}
+                space={this.props.space}
             >
                 <Header>
                     <Info>
@@ -199,7 +203,8 @@ Card.propTypes = {
     getUnitHandler: PropTypes.func.isRequired,
     updateChartHandler: PropTypes.func.isRequired,
     numberOfSamples: PropTypes.number,
-    middle: PropTypes.bool
+    spacing: PropTypes.bool,
+    space: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
 };
 
 const Container = styled.div`
@@ -208,8 +213,8 @@ const Container = styled.div`
     height: ${props => (props.height ? props.height : '100%')};
     width: ${props => (props.width ? props.width : '100%')};
     background-color: ${props => props.theme.white};
-    margin: 10px 0;
-    margin: ${props => props.middle && '10px'};
+    margin: 1rem;
+    margin: ${props => props.spacing && `1rem ${props.space}`};
     border-radius: 10px;
     padding: 1rem 2rem;
 `;

@@ -217,7 +217,8 @@ export class Dashboard extends React.Component {
                                 chartScaleX={1.2}
                                 getUnitHandler={getMeasurementUnit}
                                 updateChartHandler={updateChartData}
-                                middle={(index + 2) % 3 === 0}
+                                spacing={(index + 2) % 3 === 0}
+                                space="1.5rem"
                             />
                         ))}
                         {this.state.enData.values.map((item, index) => (
@@ -230,7 +231,8 @@ export class Dashboard extends React.Component {
                                 chartScaleX={1.2}
                                 getUnitHandler={getMeasurementUnit}
                                 updateChartHandler={updateChartData}
-                                middle={(index + 2) % 3 === 0}
+                                spacing={(index + 2) % 3 === 0}
+                                space="1.5rem"
                             />
                         ))}
                     </List>
