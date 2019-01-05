@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-import { generateRandom, DIGITS, STATUS } from './';
+import {DIGITS, generateRandom, STATUS} from './';
 
 const NUMBER_OF_BARS = 34;
 const NUMBER_OF_METER_BARS = 300;
@@ -71,73 +71,158 @@ export const generate3PhaseMeter = () => {
     };
 };
 
-export const map3PhaseMeter = ({ data, timestamp }) => {
+export const map3PhaseMeter = ({data, timestamp}) => {
     return {
         timestamp: new Date(timestamp * 1000),
         values: [
             {
                 key: 'RP',
-                title: 'Phase R - avg power',
+                title: 'Phase R - Power Avg',
                 value: data.average['R_Pavg'],
                 samples: data.samples,
                 status: STATUS.Default
             },
             {
                 key: 'RI',
-                title: 'Phase R - rms intensity',
+                title: 'Phase R - I rms',
                 value: data.average['R_Irms'],
                 samples: data.samples,
                 status: STATUS.Default
             },
             {
+                key: 'RImin',
+                title: 'Phase R - I min',
+                value: data.average['R_Imin'],
+                samples: data.samples,
+                status: STATUS.Default
+            },
+            {
+                key: 'RImax',
+                title: 'Phase R - I max',
+                value: data.average['R_Imax'],
+                samples: data.samples,
+                status: STATUS.Default
+            },
+            {
                 key: 'RV',
-                title: 'Phase R - rms voltage',
+                title: 'Phase R - V rms',
                 value: data.average['R_Vrms'],
                 samples: data.samples,
                 status: STATUS.Default
             },
             {
+                key: 'RVmin',
+                title: 'Phase R - V min',
+                value: data.average['R_Vmin'],
+                samples: data.samples,
+                status: STATUS.Default
+            },
+            {
+                key: 'RVmax',
+                title: 'Phase R - V max',
+                value: data.average['R_Vmax'],
+                samples: data.samples,
+                status: STATUS.Default
+            },
+            {
                 key: 'SP',
-                title: 'Phase S - avg power',
+                title: 'Phase S - Power avg',
                 value: data.average['S_Pavg'],
                 samples: data.samples,
                 status: STATUS.Default
             },
             {
                 key: 'SI',
-                title: 'Phase S - rms intensity',
+                title: 'Phase S - I rms',
                 value: data.average['S_Irms'],
                 samples: data.samples,
                 status: STATUS.Default
             },
             {
+                key: 'SImin',
+                title: 'Phase S - I min',
+                value: data.average['S_Imin'],
+                samples: data.samples,
+                status: STATUS.Default
+            },
+            {
+                key: 'SImax',
+                title: 'Phase S - I max',
+                value: data.average['S_Imax'],
+                samples: data.samples,
+                status: STATUS.Default
+            },
+            {
                 key: 'SV',
-                title: 'Phase S - rms voltage',
+                title: 'Phase S - V rms',
                 value: data.average['S_Vrms'],
                 samples: data.samples,
                 status: STATUS.Default
             },
             {
+                key: 'SVmin',
+                title: 'Phase S - V min',
+                value: data.average['S_Vmin'],
+                samples: data.samples,
+                status: STATUS.Default
+            },
+            {
+                key: 'SVmax',
+                title: 'Phase S - V max',
+                value: data.average['S_Vmax'],
+                samples: data.samples,
+                status: STATUS.Default
+            },
+            {
                 key: 'TP',
-                title: 'Phase T - avg power',
+                title: 'Phase T - Power avg',
                 value: data.average['T_Pavg'],
                 samples: data.samples,
                 status: STATUS.Default
             },
             {
                 key: 'TI',
-                title: 'Phase T - rms intensity',
+                title: 'Phase T - I rms',
                 value: data.average['T_Irms'],
                 samples: data.samples,
                 status: STATUS.Default
             },
             {
+                key: 'TImin',
+                title: 'Phase T - I min',
+                value: data.average['T_Imin'],
+                samples: data.samples,
+                status: STATUS.Default
+            },
+            {
+                key: 'TImax',
+                title: 'Phase T - I max',
+                value: data.average['T_Imax'],
+                samples: data.samples,
+                status: STATUS.Default
+            },
+            {
                 key: 'TV',
-                title: 'Phase T - rms voltage',
+                title: 'Phase T - V rms',
                 value: data.average['T_Vrms'],
                 samples: data.samples,
                 status: STATUS.Default
             },
+            {
+                key: 'TVmin',
+                title: 'Phase T - V min',
+                value: data.average['T_Vmin'],
+                samples: data.samples,
+                status: STATUS.Default
+            },
+            {
+                key: 'TVmax',
+                title: 'Phase T - V max',
+                value: data.average['T_Vmax'],
+                samples: data.samples,
+                status: STATUS.Default
+            },
+
             {
                 key: 'TEMP',
                 title: 'Temperature - average on all 3 phases',
@@ -159,7 +244,10 @@ export const map3PhaseMeter = ({ data, timestamp }) => {
 export const get3MeterUnit = (key, value) => {
     if (key === 'RP' || key === 'SP' || key === 'TP') {
         return `${value} W`;
-    } else if (key === 'RI' || key === 'SI' || key === 'TI') {
+    } else if (
+        key === 'RI' || key === 'RImin' || key === 'RImax' ||
+        key === 'SI' || key === 'SImin' || key === 'SImax' ||
+        key === 'TI' || key === 'TImin' || key === 'TImax') {
         return `${value} A`;
     } else if (key === 'TEMP') {
         return `${value} °C`;
@@ -169,8 +257,8 @@ export const get3MeterUnit = (key, value) => {
 };
 
 export const updateSamplesChart = (nextProps, currentState) => {
-    const { samples, key } = nextProps.item;
-    const { chartData } = currentState;
+    const {samples, key} = nextProps.item;
+    const {chartData} = currentState;
 
     if (chartData.length === 0) {
         const data = [];
@@ -212,8 +300,8 @@ export const updateSamplesChart = (nextProps, currentState) => {
 };
 
 export const updateValueChart = (nextProps, currentState) => {
-    const { value } = nextProps.item;
-    const { chartData } = currentState;
+    const {value} = nextProps.item;
+    const {chartData} = currentState;
 
     if (chartData.length === 0) {
         const data = [];
@@ -250,8 +338,20 @@ const selectCorrectSample = (sample, key) => {
         case 'RI':
             value = sample['R_Irms'];
             break;
+        case 'RImin':
+            value = sample['R_Imin'];
+            break;
+        case 'RImax':
+            value = sample['R_Imax'];
+            break;
         case 'RV':
             value = sample['R_Vrms'];
+            break;
+        case 'RVmin':
+            value = sample['R_Vmin'];
+            break;
+        case 'RVmax':
+            value = sample['R_Vmax'];
             break;
         case 'SP':
             value = sample['S_Pavg'];
@@ -259,8 +359,20 @@ const selectCorrectSample = (sample, key) => {
         case 'SI':
             value = sample['S_Irms'];
             break;
+        case 'SImin':
+            value = sample['S_Imin'];
+            break;
+        case 'SImax':
+            value = sample['S_Imax'];
+            break;
         case 'SV':
             value = sample['S_Vrms'];
+            break;
+        case 'SVmin':
+            value = sample['S_Vmin'];
+            break;
+        case 'SVmax':
+            value = sample['S_Vmax'];
             break;
         case 'TP':
             value = sample['T_Pavg'];
@@ -268,8 +380,20 @@ const selectCorrectSample = (sample, key) => {
         case 'TI':
             value = sample['T_Irms'];
             break;
+        case 'TImin':
+            value = sample['T_Imin'];
+            break;
+        case 'TImax':
+            value = sample['T_Imax'];
+            break;
         case 'TV':
             value = sample['T_Vrms'];
+            break;
+        case 'TVmin':
+            value = sample['T_Vmin'];
+            break;
+        case 'TVmax':
+            value = sample['T_Vmax'];
             break;
         case 'TEMP':
             value = sample['temp'];
@@ -288,85 +412,169 @@ export const generateInitialMeterState = () => {
     return {
         meter: {
             timestamp: new Date(Date.now()),
-            values: [
-                {
-                    key: 'RP',
-                    title: 'Phase R - avg power',
-                    value: '-',
-                    samples: [],
-                    status: STATUS.Default
-                },
-                {
-                    key: 'RI',
-                    title: 'Phase R - rms intensity',
-                    value: '-',
-                    samples: [],
-                    status: STATUS.Default
-                },
-                {
-                    key: 'RV',
-                    title: 'Phase R - rms voltage',
-                    value: '-',
-                    samples: [],
-                    status: STATUS.Default
-                },
-                {
-                    key: 'SP',
-                    title: 'Phase S - avg power',
-                    value: '-',
-                    samples: [],
-                    status: STATUS.Default
-                },
-                {
-                    key: 'SI',
-                    title: 'Phase S - rms intensity',
-                    value: '-',
-                    samples: [],
-                    status: STATUS.Default
-                },
-                {
-                    key: 'SV',
-                    title: 'Phase S - rms voltage',
-                    value: '-',
-                    samples: [],
-                    status: STATUS.Default
-                },
-                {
-                    key: 'TP',
-                    title: 'Phase T - avg power',
-                    value: '-',
-                    samples: [],
-                    status: STATUS.Default
-                },
-                {
-                    key: 'TI',
-                    title: 'Phase T - rms intensity',
-                    value: '-',
-                    samples: [],
-                    status: STATUS.Default
-                },
-                {
-                    key: 'TV',
-                    title: 'Phase T - rms voltage',
-                    value: '-',
-                    samples: [],
-                    status: STATUS.Default
-                },
-                {
-                    key: 'TEMP',
-                    title: 'Temperature - average on all 3 phases',
-                    value: '-',
-                    samples: [],
-                    status: STATUS.Default
-                },
-                {
-                    key: 'VREF',
-                    title: 'V Ref - on all 3 phases',
-                    value: '-',
-                    samples: [],
-                    status: STATUS.Default
-                }
-            ]
+            values: [{
+                key: 'RP',
+                title: 'Phase R - Power Avg',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            },
+            {
+                key: 'RI',
+                title: 'Phase R - I rms',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            },
+            {
+                key: 'RImin',
+                title: 'Phase R - I min',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            },
+            {
+                key: 'RImax',
+                title: 'Phase R - I max',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            },
+            {
+                key: 'RV',
+                title: 'Phase R - V rms',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            },
+            {
+                key: 'RVmin',
+                title: 'Phase R - V min',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            },
+            {
+                key: 'RVmax',
+                title: 'Phase R - V max',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            },
+            {
+                key: 'SP',
+                title: 'Phase S - Power avg',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            },
+            {
+                key: 'SI',
+                title: 'Phase S - I rms',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            },
+            {
+                key: 'SImin',
+                title: 'Phase S - I min',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            },
+            {
+                key: 'SImax',
+                title: 'Phase S - I max',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            },
+            {
+                key: 'SV',
+                title: 'Phase S - V rms',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            },
+            {
+                key: 'SVmin',
+                title: 'Phase S - V min',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            },
+            {
+                key: 'SVmax',
+                title: 'Phase S - V max',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            },
+            {
+                key: 'TP',
+                title: 'Phase T - Power avg',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            },
+            {
+                key: 'TI',
+                title: 'Phase T - I rms',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            },
+            {
+                key: 'TImin',
+                title: 'Phase T - I min',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            },
+            {
+                key: 'TImax',
+                title: 'Phase T - I max',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            },
+            {
+                key: 'TV',
+                title: 'Phase T - V rms',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            },
+            {
+                key: 'TVmin',
+                title: 'Phase T - V min',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            },
+            {
+                key: 'TVmax',
+                title: 'Phase T - V max',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            },
+
+            {
+                key: 'TEMP',
+                title: 'Temperature - average on all 3 phases',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            },
+            {
+                key: 'VREF',
+                title: 'V Ref - on all 3 phases',
+                value: '-',
+                samples: [],
+                status: STATUS.Default
+            }
+        ]
         },
         debugging: {
             timestamp: new Date(Date.now()),
